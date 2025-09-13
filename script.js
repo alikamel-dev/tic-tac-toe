@@ -3,52 +3,75 @@
 // Objects for Gameboard and Game are created through Immediately Invoked Function Expressions (IIFEs) (The Module Pattern), as they are meant to have one instance.
 // Object for Player is created through a factory function, as it is meant to have two instances.
 
-const Gameboard = (function () {
-    // Tic-Tac-Toe is a subtype of m,n,k-games (as a 3,3,3-game or a 3-in-a-row game on a 3 by 3 board) or n raised to d games (as a 3 raised to a power of 2 game). Refer to https://en.wikipedia.org/wiki/Tic-tac-toe#Gameplay for more information.
-    // I have chosen the m,n,k-game general model, as it provides more flexibility in case we want to give the user the option to modify the game structure or we want to implement another variant (e.g. gomoku, a 15,15,5-game).    
-    const [numberOfRows, numberOfColumns, numberOfCellsMarkedToWin] = [3, 3, 3];
-
-    let gameboard = [];
-
-    const clear = () => {
-        // Arrays created using the array constructor with the number of elements passed as argument contain that number as empty slots (i.e. they are sparse arrays).
-        // Array iteration methods and `for...of` cannot iterate over empty slots, so one has to define values for them, or use other `for` iteration statements.
-        for (let rowNumber = 0; rowNumber < numberOfRows; ++rowNumber)
-            gameboard[rowNumber] = new Array(numberOfColumns).fill("", 0);
-    }
-
-    const init = () => {
-        gameboard = new Array(numberOfRows);
-
-        clear();
-    };
-
-    init();
-
-    const [getNumberOfRows, getNumberOfColumns, getNumberOfCellsMarkedToWin] = [
-        () => numberOfRows,
-        () => numberOfColumns,
-        () => numberOfCellsMarkedToWin,
-    ];
-
-    const getGameboard = () => gameboard;
-
-    // Setter methods will be created when the option to modify gameboard dimensions and number of cells marked by one player in a row/column/diagonal is added.
-
-    // `Object.preventExtensions` is used to prevent addition of properties to the returned object. Read more at https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/preventExtensions#description.
-    return Object.preventExtensions({getNumberOfRows, getNumberOfColumns, getNumberOfCellsMarkedToWin, getGameboard, clear});
-})();
-
 const Game = (function () {
+    // Private properties
+
+    // IIFE to create Gameboard moved here to prevent access to properties only meant to be accessed by IIFE for Game.
+    const Gameboard = (function () {
+        // Private properties
+
+        // Tic-Tac-Toe can be considered a type of an (n raised to the power of 2) game, specifically the (3 raised to the power of 2) type.
+        // This variable can be used to create other variants of the game where n is equal to a different value.
+        const width = 3;
+        const area = (width ** 2);
+
+        let gameboard = [];
+
+        function init() {
+            gameboard = new Array(width);
+
+            clear();
+        };
+
+        init();
+
+        function isValidRowOrColumnNumber(number) {
+            return (typeof number === "number" && number >= 0 && number < width);
+        }
+
+        // Public properties (to Game module)
+
+        const getGameboard = () => gameboard;
+        const getGameboardWidth = () => width;
+        const getGameboardArea = () => area;
+
+        const markGameboard = (mark, rowNumber, columnNumber) => {
+            if (!Game.getMarks().includes(mark))
+                throw Error(`The value for mark cannot be \`${mark}\`. It must be one of the following strings: ${Game.getMarks()}.`);
+
+            const areRowAndColumnNumbersValid = isValidRowOrColumnNumber(rowNumber) && isValidRowOrColumnNumber(columnNumber);
+
+            if (!areRowAndColumnNumbersValid)
+                throw Error(`Invalid value(s) for row and/or column number (Row number: ${rowNumber}, Column number: ${columnNumber})`);
+
+            const cellToBeMarked = gameboard[rowNumber][columnNumber];
+            if (cellToBeMarked !== "")
+                return false;
+
+            gameboard[rowNumber][columnNumber] = mark;
+
+            return true;
+        };
+
+        function clear() {
+            // Arrays created using the array constructor with the number of elements passed as argument contain that number as empty slots (i.e. they are sparse arrays).
+            // Array iteration methods and `for...of` cannot iterate over empty slots, so one has to define values for them, or use other `for` iteration statements.
+            for (let rowNumber = 0; rowNumber < width; ++rowNumber)
+                gameboard[rowNumber] = new Array(width).fill("", 0);
+        };
+
+        // Setter methods will be created when the option to modify gameboard dimensions and number of cells marked by one player in a row/column/diagonal is added.
+
+        // `Object.preventExtensions` is used to prevent addition of properties to the returned object. Read more at https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/preventExtensions#description.
+        return Object.preventExtensions({ getGameboard, getGameboardWidth, getGameboardArea, markGameboard, clear });
+    })();
+
     const marks = ["X", "O"];
     const firstPlayingMark = marks[0];
 
-    const getMarks = () => marks;
-    const getFirstPlayingMark = () => firstPlayingMark;
-
     const isAValidMark = mark => marks.includes(mark.toUpperCase());
 
-    // Factory function to create a new player moved here to prevent creation of more players than two.
+    // Factory function to create a new player moved here to prevent creation of more players than required.
     const Player = (name, mark) => {
         if (typeof name !== "string")
             throw Error(`The value for player name cannot be of type \`${typeof name}\`. It must be of type \`string\`.`);
@@ -64,8 +87,79 @@ const Game = (function () {
 
     let players = [];
 
-    const getPlayers = () => players;
+    let currentPlayer = null;
+    let currentTurn = 1;
 
+    // The turn before which neither player can win against or draw with the other, as neither player has placed the number of instances of their mark required for a win and the board is not yet full.
+    const firstTurnAtWhichGameCanEnd = marks.length * (Gameboard.getGameboardWidth() - 1) + 1;
+
+    function markResult(mark, rowNumber, columnNumber) {
+        // Return early if it is impossible for either player to win in the current turn (as neither player has placed the required number of instances of their mark that would make them win).
+        if (currentTurn < firstTurnAtWhichGameCanEnd)
+            return 0;
+
+        const gameboard = Gameboard.getGameboard();
+
+        // (1) Checking the row of the gameboard where the specified cell is located
+
+        const rowMarked = gameboard[rowNumber].every(cell => cell === mark);
+        if (rowMarked) return 1;
+
+        // (2) Checking the column of the gameboard where the specified cell is located
+
+        const columnMarked = gameboard.every(row => row[columnNumber] === mark);
+
+        if (columnMarked) return 1;
+
+        // (3) Checking the main diagonal of the gameboard
+
+        // In both of the following `for` statements, checking the condition `row < gameboard.length` without checking another regarding the value of `column` is enough.
+        // Also, separating two conditions using the comma operator (`,`) would make the entire parent condition statement return the value of the second condition, as the comma operator returns the value of the last operand.
+
+        // The marked cell is in the main diagonal of the gameboard if the number of its row is equal to the number of its column.
+        if (rowNumber === columnNumber) {
+            let mainDiagonalMarked = true;
+            for (let row = 0, column = 0; row < gameboard.length; ++row, ++column) {
+                if (gameboard[row][column] !== mark) {
+                    mainDiagonalMarked = false;
+
+                    break;
+                }
+            };
+                
+            if (mainDiagonalMarked) return 1;
+        }
+
+        // (4) Checking the anti-diagonal of the gameboard
+
+        // The marked cell is in the anti-diagonal of the gameboard if the sum of the numbers of its row and its column is equal to the gameboard width minus one.
+        if (rowNumber + columnNumber === gameboard.length - 1) {
+            let antiDiagonalMarked = true;
+            for (let row = 0, column = gameboard.length - 1; row < gameboard.length; ++row, --column) {
+                if (gameboard[row][column] !== mark) {
+                    antiDiagonalMarked = false;
+
+                    break;
+                }
+            };
+
+            if (antiDiagonalMarked) return 1;
+        }
+
+        // (5) Checking if the board is full (in which case both players come to a draw)
+        if (currentTurn === Gameboard.getGameboardArea())
+            return 2;
+
+        // (6) If all of the previous checks are negative, then the game is not over yet.
+        return 0;
+    }
+
+    // Public properties
+
+    const getMarks = () => marks;
+    const getFirstPlayingMark = () => firstPlayingMark;
+
+    const getPlayers = () => players;
     const getPlayer = (playerNumber) => {
         if (typeof playerNumber !== "number")
             throw Error(`The value for player number cannot be of type \`${typeof playerNumber}. It must be of type \`number\`.`);
@@ -76,11 +170,18 @@ const Game = (function () {
         return players[playerNumber - 1];
     };
 
+    const getCurrentPlayer = () => currentPlayer;
+    const getCurrentTurn = () => currentTurn;
+
     const start = (...playerNames) => {
         if (players.length > 0) {
-            // If there is a game in progress (i.e. there are players), end it by removing said players and clearing the gameboard.
+            // If there is a game in progress (i.e. there are players), reset it.
 
             players = [];
+
+            currentPlayer = null;
+            currentTurn = 1;
+
             Gameboard.clear();
         }
 
@@ -90,7 +191,40 @@ const Game = (function () {
         playerNames.forEach((playerName, playerIndex) => { 
             players.push( Player(playerName, marks[playerIndex]) );
         });
+
+        currentPlayer = players[0];
     };
 
-    return Object.preventExtensions({ getMarks, getFirstPlayingMark, isAValidMark, getPlayers, getPlayer, start });
+    const playTurn = (rowNumber, columnNumber) => {
+        if (typeof rowNumber !== "number" || typeof columnNumber !== "number")
+            throw Error(`Row and Column numbers must be of the \`number\` type (You entered a/an \`${typeof rowNumber}\` and a/an \`${typeof columnNumber}\` for row and column numbers, respectively.)`);
+
+        const endTurn = Gameboard.markGameboard(currentPlayer.getMark(), rowNumber, columnNumber);
+
+        if (endTurn) {
+            const turnResult = markResult(currentPlayer.getMark(), rowNumber, columnNumber);
+
+            switch (turnResult) {
+                case 0:     // game is not over
+                    const currentPlayerIndex = players.indexOf(currentPlayer);
+                    currentPlayer = (currentPlayerIndex === players.length - 1 ? players[0] : players[currentPlayerIndex + 1]);
+
+                    ++currentTurn;
+
+                    break;
+                
+                case 1:     // game is over and current player wins
+                case 2:     // game is over and both players come to a draw
+                    const playerNames = players.map(player => player.getName());
+                    start(...playerNames);
+
+                    break;
+            }
+
+            return turnResult;
+        }
+
+    };
+
+    return Object.preventExtensions({ getMarks, getFirstPlayingMark, getPlayers, getPlayer, getCurrentPlayer, getCurrentTurn, start, playTurn });
 })();
