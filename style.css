@@ -1,0 +1,86 @@
+/* Fonts */
+
+/* Title font: Caveat */
+@font-face {
+  font-family: 'Caveat';
+
+  src:  local('Caveat Bold'), local('Caveat-Bold'),
+        url('assets/fonts/caveat/hinted-subset-Caveat-Bold.woff2') format('woff2'),
+        url('assets/fonts/caveat/hinted-subset-Caveat-Bold.woff') format('woff');
+
+  font-weight: bold;
+  font-style: normal;
+    
+  font-display: block;
+}
+
+/* Body font: Comic Neue */
+@font-face {
+  /* Comic Neue Regular */
+  font-family: 'Comic Neue';
+
+  src:  local('Comic Neue Regular'), local('ComicNeue-Regular'),
+        url('assets/fonts/comic-neue/hinted-ComicNeue-Regular.woff2') format('woff2'),
+        url('assets/fonts/comic-neue/hinted-ComicNeue-Regular.woff') format('woff');
+
+  font-weight: normal;
+  font-style: normal;
+
+  font-display: block;
+}
+
+@font-face {
+  /* Comic Neue Bold */
+  font-family: 'Comic Neue';
+  
+  src:  local('Comic Neue Bold'), local('ComicNeue-Bold'),
+        url('assets/fonts/comic-neue/hinted-ComicNeue-Bold.woff2') format('woff2'),
+        url('assets/fonts/comic-neue/hinted-ComicNeue-Bold.woff') format('woff');
+  
+  font-weight: bold;
+  font-style: normal;
+  
+  font-display: block;
+}
+
+@font-face {
+  /* Comic Neue Italic */
+  font-family: 'Comic Neue';
+
+  src:  local('Comic Neue Italic'), local('ComicNeue-Italic'),
+        url('assets/fonts/comic-neue/hinted-ComicNeue-Italic.woff2') format('woff2'),
+        url('assets/fonts/comic-neue/hinted-ComicNeue-Italic.woff') format('woff');
+  
+  font-weight: normal;
+  font-style: italic;
+  
+  font-display: block;
+}
+
+@font-face {
+  /* Comic Neue Bold Italic */
+  font-family: 'Comic Neue';
+  
+  src:  local('Comic Neue Bold Italic'), local('ComicNeue-BoldItalic'),
+        url('assets/fonts/comic-neue/hinted-ComicNeue-BoldItalic.woff2') format('woff2'),
+        url('assets/fonts/comic-neue/hinted-ComicNeue-BoldItalic.woff') format('woff');
+
+  font-weight: bold;
+  font-style: italic;
+
+  font-display: block;
+}
+
+/* Player marker font: Waiting for the Sunrise */
+@font-face {
+  font-family: 'Waiting for the Sunrise';
+
+  src:  local('Waiting for the Sunrise'), local('WaitingfortheSunrise'),
+        url('assets/fonts/hinted-WaitingfortheSunrise.woff2') format('woff2'),
+        url('assets/fonts/hinted-WaitingfortheSunrise.woff') format('woff');
+
+    font-weight: 300;
+    font-style: normal;
+
+    font-display: swap;
+}
