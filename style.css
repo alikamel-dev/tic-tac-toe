@@ -71,16 +71,265 @@
   font-display: block;
 }
 
-/* Player marker font: Waiting for the Sunrise */
+/* User-defined content font: Waiting for the Sunrise */
 @font-face {
   font-family: 'Waiting for the Sunrise';
 
   src:  local('Waiting for the Sunrise'), local('WaitingfortheSunrise'),
-        url('assets/fonts/hinted-WaitingfortheSunrise.woff2') format('woff2'),
-        url('assets/fonts/hinted-WaitingfortheSunrise.woff') format('woff');
+        url('assets/fonts/waiting-for-the-sunrise/hinted-WaitingfortheSunrise.woff2') format('woff2'),
+        url('assets/fonts/waiting-for-the-sunrise/hinted-WaitingfortheSunrise.woff') format('woff');
 
     font-weight: 300;
     font-style: normal;
 
     font-display: swap;
+}
+
+/* CSS Variables */
+:root {
+  /* Colors */
+
+  --main-bg-color: #FFFFFF;
+  --main-color: #000000;
+
+  --mark-1-color: #ED0A3F;
+  --mark-2-color: #0066FF;
+
+  --draw-color: #8B8680;
+
+  /* Fonts */
+
+  /* 
+  A combination of the system font stacks used on GitHub, Medium and WordPress Admin (as of October 2022), with some symbol and emoji support.
+  Read more on: https://css-tricks.com/snippets/css/system-font-stack/#aa-method-1-system-fonts-at-the-element-level.
+
+  EXPLANATION:
+  ------------
+  The stack aims to use the default font of whichever operating system the user is viewing the page on from the following: Apple systems, Windows, Android, and Linux.
+  
+  - "Noto Sans" is applied if none of the default fonts of the previous operating systems is found.
+  - "Helvetica Neue", "Arial", and sans-serif are applied as fallback for older operating systems.
+
+  - "Apple Color Emoji", "Segoe UI Emoji", and "Segoe UI Symbol" are used for rendering symbols and emojis in the native operating system font.
+
+  NOTE:
+  The `system-ui` generic font family, which can replace `-apple-system, BlinkMacSystemFont`, is not supported in the latest versions of some web browsers, so it is not used.
+  Refer to https://caniuse.com/font-family-system-ui.
+  */
+  --system-font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, Cantarell, "Noto Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+  /* TODO: Add more fonts to the title, body, and user-defined content font stack, to reduce the likelihood of falling back to the system font stack. */
+
+  --title-font: 'Caveat', var(--system-font-stack);
+  --body-font: 'Comic Neue', var(--system-font-stack);
+  --user-defined-content-font: 'Waiting for the Sunrise', var(--system-font-stack);
+}
+
+/* 
+TABLE OF CONTENTS
+-----------------
+
+You can use this table to get an overview of the stylesheet sections or jump to the desired one.
+
+Jump to the desired section by having your text editor find its index (Ctrl+F in most editors. Typically contains the index automatically when the index is selected).
+Ensure the index is enclosed within parentheses, as this prevents finding other text that contains it by mistake.
+
+(0) General styles
+
+(1) Header styles
+
+(2) Main styles
+
+(3) Footer styles
+*/
+
+/* (0) General styles */
+
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+*:focus {
+  outline: none;
+}
+
+*:not(p, small) > [class^="mark"] {
+  font-family: var(--title-font);
+}
+
+.mark-1 {
+  color: var(--mark-1-color);
+
+  border-color: var(--mark-1-color);
+}
+
+.mark-2 {
+  color: var(--mark-2-color);
+
+  border-color: var(--mark-2-color);
+}
+
+html {
+  height: 100vh;
+}
+
+body {
+  /* `body` is a block element, so it takes up the entire width of its parent `html` by default. */
+
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+
+  height: 100%;
+
+  font-family: var(--body-font);
+  font-size: 1.85rem;
+
+  text-align: center;
+
+  background-image: url(assets/images/background.jpg);
+  background-size: cover;
+
+  background-color: var(--main-bg-color);
+  color: var(--main-color);
+}
+
+a {
+  text-decoration: underline;
+
+  color: inherit;
+}
+
+a:not(:has(> img)):hover, a:not(:has(> img)):focus {
+  text-decoration: underline dashed;
+}
+
+button, label {
+  cursor: pointer;
+}
+
+button {
+  appearance: none;
+
+  border: none;
+
+  background-color: transparent;
+  color: var(--main-color);
+}
+
+button {
+  border-bottom: 2px solid var(--main-color);
+}
+
+button:hover, button:focus,
+input:hover, input:focus {
+  border-bottom-style: dashed;
+}
+
+button:active, a:active {
+  font-weight: bold;
+}
+
+input {
+  appearance: none;
+
+  border: none;
+  border-bottom: 2px solid var(--main-color);
+
+  font-family: var(--user-defined-content-font);
+  font-size: 1.5em;
+
+  text-align: center;
+
+  background-color: transparent;
+  color: var(--main-color);
+}
+
+input::placeholder {
+  color: var(--draw-color);
+}
+
+/* (1) Header styles */
+
+h1 {
+  font-family: var(--title-font);
+  font-size: 10rem;
+
+  margin: 16px 0;
+}
+
+/* (2) Main styles */
+
+main {
+  align-content: center;
+}
+
+#page-form {
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+
+  row-gap: 32px;
+}
+
+.player-names {
+  /* The following style declarations are not optimized for more than two players. */
+  display: flex;
+  flex-wrap: wrap;
+
+  justify-content: center;
+
+  gap: 128px;
+}
+
+#first-player-note:not([hidden]) {
+  display: inline-block;
+
+  margin-top: 24px;
+}
+
+.gameboard-size-label-input-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 24px;
+}
+
+.gameboard-size-input-container {
+  display: inline-block;
+}
+
+#gameboard-size-input {
+  width: 3ch;
+}
+
+#gameboard-size-input:placeholder-shown {
+  width: 9ch;
+}
+
+/* (3) Footer styles */
+
+footer {
+  padding: 32px 0;
+}
+
+.credit {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+
+  border: 2px solid var(--main-color);
+  padding: 16px 32px;
+}
+
+.credit > a:has(> img) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.credit > a:last-child::before {
+  content: ' | ';
+
+  /* Margins here are used in place of whitespace characters not rendered due to flexbox layout, so they are defined in `rem` units. */
+  margin: 0px 1rem;
 }

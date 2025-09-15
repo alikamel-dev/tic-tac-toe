@@ -239,12 +239,14 @@ const DisplayController = (function () {
     // The value of the `value` attribute does NOT change as the associated input element text content is changed, 
     // Thus, `HTMLElementNode.value` (which returns the current value of HTMLElementNode) is used instead of `HTMLElementNode.getAttribute("value")`.
 
+    const intro = document.body.querySelector("#intro");
+
     const form = document.body.querySelector("#page-form");
     const [playerNamesSection, gameboardSection, gameboardSizeSection] = Array.from(form.querySelectorAll(".form-section"));
 
     const playerNames = playerNamesSection.querySelector(".player-names");
     
-    const firstPlayerNote = playerNamesSection.querySelector("#first-player-note");
+    const firstPlayerNote = form.querySelector("small#first-player-note");
     const firstPlayerNoteSpan = firstPlayerNote.querySelector(".mark-1");
 
     const playerNameLabelInputTemplate = playerNames.querySelector("#player-name-label-input-template");
@@ -315,7 +317,8 @@ const DisplayController = (function () {
             input.setAttribute("tabindex", `${tabIndex}`);
         });
 
-        firstPlayerNote.setAttribute("hidden", `${areInputsReadOnly}`);
+        intro.setAttribute("hidden", true);
+        firstPlayerNote.hidden = areInputsReadOnly;
     }
 
     const doOnNewGame = () => {
@@ -353,7 +356,6 @@ const DisplayController = (function () {
             input.setAttribute("title", `Enter a name for the player who is going to play as (${mark})`);
 
             label.setAttribute("for", input.getAttribute("id"));
-            label.setAttribute("class", `mark-${playerNumber}`);
             label.innerHTML = `<span class="mark-${playerNumber}">${mark}</span> is `;
 
             setGameboardHeight();

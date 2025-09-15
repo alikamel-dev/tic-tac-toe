@@ -5,7 +5,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <title>Tic-Tac-Toe | by Ali Aboul-Sauood</title>
+        <title>Xs and Os | by Ali Aboul-Sauood</title>
 
         <!-- Preload WOFF2 files for fonts used to render above-the-fold content -->
         <link rel="preload" href="assets/fonts/caveat/hinted-subset-Caveat-Bold.woff2" as="font" type="font/woff2" crossorigin>
@@ -13,7 +13,7 @@
 
         <!-- normalize.css v8.0.1 -->
         <link rel="stylesheet" href="normalize.css">
-        
+
         <link rel="stylesheet" href="style.css">
 
         <script src="script.js" defer></script>
@@ -21,26 +21,36 @@
 
     <body>
         <header>
-            <h1 class="heading">Tic-Tac-Toe</h1>
+            <h1 class="heading title">
+                <span class="mark-1">X</span>s and <span class="mark-2">O</span>s
+            </h1>
         </header>
 
         <main>
             <!-- Elements with no content and Attributes with no values are modified using JavaScript. -->
 
+            <p id="intro">
+                Welcome to <span class="mark-1">X</span>s and <span class="mark-2">O</span>s!
+
+                <br>
+
+                Please fill in your names, choose the gameboard size, and click <span class="italic">New Game</span> to begin!
+            </p>
+
             <form id="page-form" action="" method="post">
                 <div class="form-section player-names-section">
-                    <p id="first-player-note">
-                        The player whose mark is <span class="mark-1"></span> plays first.
-                    </p>
-
                     <div class="player-names">
                         <template id="player-name-label-input-template">
                             <div class="player-label-input-container">
                                 <label for="" class=""></label>
-                                <input type="text" name="" id="" class="player-name-input" autofocus required title="" placeholder="15 characters max" maxlength="15" autocomplete="name">
+                                <input type="text" name="" id="" class="player-name-input" autofocus required title="" maxlength="15" autocomplete="name">
                             </div>
                         </template>
                     </div>
+
+                    <small id="first-player-note">
+                        The player whose mark is <span class="mark-1"></span> plays first.
+                    </small>
                 </div>
 
                 <div class="form-section gameboard-section">
@@ -52,7 +62,8 @@
                         <label for="gameboard-size-input">Gameboard size</label>
 
                         <div class="gameboard-size-input-container">
-                            <input type="number" name="gameboard-size" id="gameboard-size-input" required value="3" placeholder="3 - 100" min="3" max="100" autocomplete="on">
+                            <!-- A common approach to getting rid of the spinner rendered for `input` elements of `type="number"` is to use `type="tel"` -->
+                            <input type="tel" name="gameboard-size" id="gameboard-size-input" required value="3" placeholder="3 - 100" min="3" max="100" autocomplete="on">
                             <span id="gameboard-height"></span>
                         </div>
                     </div>
@@ -65,7 +76,12 @@
         </main>
 
         <footer>
-            
+            <div class="credit">
+                <a href="https://www.github.com/ali-aboulsauood" title="Click here to visit my GitHub profile! (opens in a new tab)" rel="author noopener noreferrer" target="_blank">Ali Aboul-Sauood</a>
+                <a href="https://www.github.com/ali-aboulsauood/tic-tac-toe" title="Click here to visit the project's GitHub repository! (opens in a new tab)" rel="noopener noreferrer" target="_blank">
+                    <img src="assets/images/github-mark.svg" alt="GitHub Invertocat Logo" width="24px" height="24px">
+                </a>
+            </div>
         </footer>
     </body>
 </html>
