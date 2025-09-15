@@ -277,7 +277,7 @@ const DisplayController = (function () {
         const gameboardWidth = Game.getGameboardWidth();
 
         // The HTML attribute `hidden` is not a boolean attribute, so `gameboard.setAttribute("hidden", "false");` does not work.
-        gameboard.hidden = false;
+        gameboardSection.hidden = false;
 
         const gameboardCell = document.createElement("div");
         gameboardCell.setAttribute("class", "gameboard-cell");
