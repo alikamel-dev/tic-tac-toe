@@ -153,8 +153,12 @@ Ensure the index is enclosed within parentheses, as this prevents finding other 
   outline: none;
 }
 
-*:not(p, small) > [class^="mark"] {
+*:not(p, small, .italic) > [class^="mark"] {
   font-family: var(--title-font);
+}
+
+.italic {
+  font-style: italic;
 }
 
 .mark-1 {
