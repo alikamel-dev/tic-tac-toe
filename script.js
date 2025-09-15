@@ -12,8 +12,7 @@ const Game = (function () {
 
         // Tic-Tac-Toe can be considered a type of an (n raised to the power of 2) game, specifically the (3 raised to the power of 2) type.
         // This variable can be used to create other variants of the game where n is equal to a different value.
-        const width = 3;
-        const area = (width ** 2);
+        let width = 3;
 
         let gameboard = [];
 
@@ -23,8 +22,6 @@ const Game = (function () {
             clear();
         };
 
-        init();
-
         function isValidRowOrColumnNumber(number) {
             return (typeof number === "number" && number >= 0 && number < width);
         }
@@ -33,7 +30,13 @@ const Game = (function () {
 
         const getGameboard = () => gameboard;
         const getGameboardWidth = () => width;
-        const getGameboardArea = () => area;
+        const getGameboardArea = () => (width ** 2);
+
+        const setGameboard = (newWidth) => {
+            width = newWidth;
+
+            init();
+        };
 
         const markGameboard = (mark, rowNumber, columnNumber) => {
             if (!Game.getMarks().includes(mark))
@@ -63,7 +66,7 @@ const Game = (function () {
         // Setter methods will be created when the option to modify gameboard dimensions and number of cells marked by one player in a row/column/diagonal is added.
 
         // `Object.preventExtensions` is used to prevent addition of properties to the returned object. Read more at https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/preventExtensions#description.
-        return Object.preventExtensions({ getGameboard, getGameboardWidth, getGameboardArea, markGameboard, clear });
+        return Object.preventExtensions({ getGameboard, getGameboardWidth, getGameboardArea, setGameboard, markGameboard });
     })();
 
     const marks = ["X", "O"];
@@ -173,7 +176,7 @@ const Game = (function () {
     const getCurrentPlayer = () => currentPlayer;
     const getCurrentTurn = () => currentTurn;
 
-    const start = (...playerNames) => {
+    const start = (gameboardWidth, ...playerNames) => {
         if (players.length > 0) {
             // If there is a game in progress (i.e. there are players), reset it.
 
@@ -182,7 +185,7 @@ const Game = (function () {
             currentPlayer = null;
             currentTurn = 1;
 
-            Gameboard.clear();
+            Gameboard.setGameboard(gameboardWidth);
         }
 
         if (playerNames.length !== marks.length)
@@ -223,8 +226,143 @@ const Game = (function () {
 
             return turnResult;
         }
-
     };
 
-    return Object.preventExtensions({ getMarks, getFirstPlayingMark, getPlayers, getPlayer, getCurrentPlayer, getCurrentTurn, start, playTurn });
+    return Object.preventExtensions({ getMarks, getFirstPlayingMark, getPlayers, getPlayer, getCurrentPlayer, getCurrentTurn, start, playTurn, getGameboardWidth: Gameboard.getGameboardWidth, getGameboardArea: Gameboard.getGameboardArea });
 })();
+
+const DisplayController = (function () {
+    // (A) Private variables
+
+    // (A - 1) DOM Element Nodes
+
+    // The value of the `value` attribute does NOT change as the associated input element text content is changed, 
+    // Thus, `HTMLElementNode.value` (which returns the current value of HTMLElementNode) is used instead of `HTMLElementNode.getAttribute("value")`.
+
+    const form = document.body.querySelector("#page-form");
+    const [playerNamesSection, gameboardSection, gameboardSizeSection] = Array.from(form.querySelectorAll(".form-section"));
+
+    const playerNames = playerNamesSection.querySelector(".player-names");
+    
+    const firstPlayerNote = playerNamesSection.querySelector("#first-player-note");
+    const firstPlayerNoteSpan = firstPlayerNote.querySelector(".mark-1");
+
+    const playerNameLabelInputTemplate = playerNames.querySelector("#player-name-label-input-template");
+
+    const gameboard = gameboardSection.querySelector("#gameboard");
+
+    const gameboardSizeInput = gameboardSizeSection.querySelector("#gameboard-size-input");
+    const gameboardHeightSpan = gameboardSizeSection.querySelector("#gameboard-height");
+
+    const setGameboardHeight = () => gameboardHeightSpan.textContent = ` × ${gameboardSizeInput.value}`;
+
+    const newGameButton = form.querySelector("button[type='submit']");
+
+    let playerNameInputs = null;
+
+    // (A - 2) Event Functions
+
+    const startGame = () => {
+        playerNameInputs = Array.from(form.querySelectorAll(".player-name-input"));
+        const playerNames = playerNameInputs.map(playerNameInput => playerNameInput.value);
+
+        const gameboardWidth = gameboardSizeInput.value;
+
+        Game.start(gameboardWidth, ...playerNames);
+    };
+
+    const showGameboard = () => {
+        const gameboardWidth = Game.getGameboardWidth();
+
+        // The HTML attribute `hidden` is not a boolean attribute, so `gameboard.setAttribute("hidden", "false");` does not work.
+        gameboard.hidden = false;
+
+        const gameboardCell = document.createElement("div");
+        gameboardCell.setAttribute("class", "gameboard-cell");
+        // `tabindex=0` makes the element it is set on focusable in sequential keyboard navigation ("tabbing").
+        // The element is focused after all elements that have a positive integer value for `tabindex` or otherwise precede it in document order. 
+        gameboardCell.setAttribute("tabindex", "0");
+
+        for (let i = 1; i <= Game.getGameboardArea(); ++i) {
+            const cell = gameboardCell.cloneNode(true);
+
+            gameboard.appendChild(cell);
+        }
+
+        const gameboardGridTemplateRowsAndColumns = `repeat(${gameboardWidth}, 1fr)`;
+
+        gameboard.style.display = "grid";
+        gameboard.style.gridTemplateRows = gameboardGridTemplateRowsAndColumns;
+        gameboard.style.gridTemplateColumns = gameboardGridTemplateRowsAndColumns;
+    }
+
+    const setForm = (gameStage) => {
+        if (gameStage === "gameStart" || gameStage === "start")
+            gameStage = false;
+        else if (gameStage === "gameEnd" || gameStage === "end")
+            gameStage = true;
+        else if (!(typeof gameStage === "boolean"))
+            throw TypeError(`The type of \`${gameStage}\` must be a boolean or one of the strings \`"start"\`, \`"gameStart\`, \`"end"\`, and \`"gameEnd"\` (You entered \`${gameStage}\`).`);
+
+        const areInputsReadOnly = !gameStage;
+        // A negative value for `tabindex` makes the element the attribute-value pair is set on not focusable in sequential keyboard navigation ("tabbing").
+        const tabIndex = areInputsReadOnly ? "-1" : "0";
+
+        const allInputs = [...playerNameInputs, gameboardSizeInput];
+
+        allInputs.forEach(input => {
+            input.setAttribute("readonly", `${areInputsReadOnly}`);
+            input.setAttribute("tabindex", `${tabIndex}`);
+        });
+
+        firstPlayerNote.setAttribute("hidden", `${areInputsReadOnly}`);
+    }
+
+    const doOnNewGame = () => {
+        startGame();
+        showGameboard();
+        setForm("gameStart");
+    };
+
+    form.addEventListener('submit', (event) => {
+        // Using `event.preventDefault()` in an event listener for submit button click prevents HTML form validation.
+        event.preventDefault();
+
+        doOnNewGame();
+    })
+
+    // Public variables
+
+    function displayNewGameScreen() {
+        const marks = Game.getMarks();
+
+        firstPlayerNoteSpan.textContent = Game.getFirstPlayingMark();
+
+        marks.forEach((mark, index) => {
+            const documentFragment = playerNameLabelInputTemplate.content.cloneNode(true);
+
+            const label = documentFragment.querySelector("label");
+            const input = documentFragment.querySelector(".player-name-input");
+
+            const playerNumber = index + 1;
+
+            input.setAttribute("name", `player-${playerNumber}-name`);
+            input.setAttribute("id", `player-${playerNumber}-name-input`);
+            input.classList.add(`mark-${playerNumber}`);
+
+            input.setAttribute("title", `Enter a name for the player who is going to play as (${mark})`);
+
+            label.setAttribute("for", input.getAttribute("id"));
+            label.setAttribute("class", `mark-${playerNumber}`);
+            label.innerHTML = `<span class="mark-${playerNumber}">${mark}</span> is `;
+
+            setGameboardHeight();
+
+            playerNames.appendChild(documentFragment);
+        });
+    };
+
+    return Object.preventExtensions({ displayNewGameScreen });
+})();
+
+DisplayController.displayNewGameScreen();
