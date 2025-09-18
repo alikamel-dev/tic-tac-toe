@@ -282,11 +282,12 @@ const DisplayController = (function () {
 
     const startGame = () => {
         playerNameInputs = Array.from(form.querySelectorAll(".player-name-input"));
-        const playerNames = playerNameInputs.map(playerNameInput => playerNameInput.value);
 
+        const playerNames = playerNameInputs.map(playerNameInput => playerNameInput.value);
         const gameboardWidth = gameboardSizeInput.value;
 
         Game.start(gameboardWidth, ...playerNames);
+
         highlightCurrentPlayer();
     };
 
@@ -304,8 +305,8 @@ const DisplayController = (function () {
         gameboard.style.gridTemplateRows = gameboardGridTemplateRowsAndColumns;
 
         const gameboardRow = document.createElement("div");
+
         gameboardRow.setAttribute("class", "gameboard-row");
-        
         gameboardRow.style.display = "grid";
         gameboardRow.style.gridTemplateColumns = gameboardGridTemplateRowsAndColumns;
 
@@ -322,10 +323,10 @@ const DisplayController = (function () {
                 const cell = gameboardCell.cloneNode(true);
 
                 row.appendChild(cell);
-            }
+            };
 
             gameboard.appendChild(row.cloneNode(true));
-        }
+        };
 
         // (?) The first line below successfully sets the width to `3ch` (for a 3-by-3 gameboard), but the one after it never works as expected.
 
@@ -333,17 +334,18 @@ const DisplayController = (function () {
         gameboard.style.width = `max(${getComputedStyle(gameboard).height}, ${gameboardWidth}ch})`;
 
         footer.hidden = true;
-    }
+    };
 
     const setForm = (gameStage) => {
-        if (gameStage === "gameStart" || gameStage === "start")
+        if (gameStage === "gameStart")
             gameStage = false;
-        else if (gameStage === "gameEnd" || gameStage === "end")
+        else if (gameStage === "gameEnd")
             gameStage = true;
         else if (!(typeof gameStage === "boolean"))
             throw TypeError(`The type of \`${gameStage}\` must be a boolean or one of the strings \`"start"\`, \`"gameStart\`, \`"end"\`, and \`"gameEnd"\` (You entered \`${gameStage}\`).`);
 
         const areInputsReadOnly = !gameStage;
+
         // A negative value for `tabindex` makes the element the attribute-value pair is set on not focusable in sequential keyboard navigation ("tabbing").
         const tabIndex = areInputsReadOnly ? "-1" : "0";
 
@@ -354,9 +356,9 @@ const DisplayController = (function () {
             input.setAttribute("tabindex", `${tabIndex}`);
         });
 
-        intro.setAttribute("hidden", true);
+        intro.hidden = true;
         firstPlayerNote.hidden = areInputsReadOnly;
-    }
+    };
 
     const doOnNewGame = () => {
         startGame();
@@ -369,7 +371,7 @@ const DisplayController = (function () {
         event.preventDefault();
 
         doOnNewGame();
-    })
+    });
 
     // Public variables
 
@@ -389,7 +391,6 @@ const DisplayController = (function () {
             input.setAttribute("name", `player-${playerNumber}-name`);
             input.setAttribute("id", `player-${playerNumber}-name-input`);
             input.classList.add(`mark-${playerNumber}`);
-
             input.setAttribute("title", `Enter a name for the player who is going to play as (${mark})`);
 
             label.setAttribute("for", input.getAttribute("id"));
