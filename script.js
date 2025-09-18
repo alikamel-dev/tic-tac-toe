@@ -4,11 +4,10 @@
 // Object for Player is created through a factory function, as it is meant to have two instances.
 
 const Game = (function () {
-    // Private properties
+    // (A) Private variables
 
-    // IIFE to create Gameboard moved here to prevent access to properties only meant to be accessed by IIFE for Game.
     const Gameboard = (function () {
-        // Private properties
+        // (A) Private variables
 
         // Tic-Tac-Toe can be considered a type of an (n raised to the power of 2) game, specifically the (3 raised to the power of 2) type.
         // This variable can be used to create other variants of the game where n is equal to a different value.
@@ -16,17 +15,25 @@ const Game = (function () {
 
         let gameboard = [];
 
-        function init() {
+        const clear = () => {
+            // Arrays created using the array constructor with the number of elements passed as argument contain that number as empty slots (i.e. they are sparse arrays).
+            // Array iteration methods and `for...of` cannot iterate over empty slots, so one has to define values for them, or use other `for` iteration statements.
+            for (let rowNumber = 0; rowNumber < width; ++rowNumber)
+                gameboard[rowNumber] = new Array(width).fill("", 0);
+        };
+
+        const init = () => {
             gameboard = new Array(width);
 
+            // Creates a number of sub-arrays representing the gameboard rows.
             clear();
         };
 
-        function isValidRowOrColumnNumber(number) {
+        const isValidRowOrColumnNumber = (number) => {
             return (typeof number === "number" && number >= 0 && number < width);
-        }
+        };
 
-        // Public properties (to Game module)
+        // (B) Public variables (to `Game`)
 
         const getGameboard = () => gameboard;
         const getGameboardWidth = () => width;
@@ -49,23 +56,18 @@ const Game = (function () {
 
             const cellToBeMarked = gameboard[rowNumber][columnNumber];
             if (cellToBeMarked !== "")
+                // `false` means that the current player's turn has not ended yet.
                 return false;
 
             gameboard[rowNumber][columnNumber] = mark;
 
+            // `true` means that the current player's turn has ended.
             return true;
         };
 
-        function clear() {
-            // Arrays created using the array constructor with the number of elements passed as argument contain that number as empty slots (i.e. they are sparse arrays).
-            // Array iteration methods and `for...of` cannot iterate over empty slots, so one has to define values for them, or use other `for` iteration statements.
-            for (let rowNumber = 0; rowNumber < width; ++rowNumber)
-                gameboard[rowNumber] = new Array(width).fill("", 0);
-        };
-
-        // Setter methods will be created when the option to modify gameboard dimensions and number of cells marked by one player in a row/column/diagonal is added.
-
-        // `Object.preventExtensions` is used to prevent addition of properties to the returned object. Read more at https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/preventExtensions#description.
+        // `Object.preventExtensions` is used to prevent addition of properties to the returned object. 
+        // Read more at https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/preventExtensions#description.
+        
         return Object.preventExtensions({ getGameboard, getGameboardWidth, getGameboardArea, setGameboard, markGameboard });
     })();
 
@@ -111,7 +113,6 @@ const Game = (function () {
         // (2) Checking the column of the gameboard where the specified cell is located
 
         const columnMarked = gameboard.every(row => row[columnNumber] === mark);
-
         if (columnMarked) return 1;
 
         // (3) Checking the main diagonal of the gameboard
@@ -122,32 +123,32 @@ const Game = (function () {
         // The marked cell is in the main diagonal of the gameboard if the number of its row is equal to the number of its column.
         if (rowNumber === columnNumber) {
             let mainDiagonalMarked = true;
+
             for (let row = 0, column = 0; row < gameboard.length; ++row, ++column) {
                 if (gameboard[row][column] !== mark) {
                     mainDiagonalMarked = false;
-
                     break;
-                }
+                };
             };
                 
             if (mainDiagonalMarked) return 1;
-        }
+        };
 
         // (4) Checking the anti-diagonal of the gameboard
 
         // The marked cell is in the anti-diagonal of the gameboard if the sum of the numbers of its row and its column is equal to the gameboard width minus one.
         if (rowNumber + columnNumber === gameboard.length - 1) {
             let antiDiagonalMarked = true;
+
             for (let row = 0, column = gameboard.length - 1; row < gameboard.length; ++row, --column) {
                 if (gameboard[row][column] !== mark) {
                     antiDiagonalMarked = false;
-
                     break;
-                }
+                };
             };
 
             if (antiDiagonalMarked) return 1;
-        }
+        };
 
         // (5) Checking if the board is full (in which case both players come to a draw)
         if (currentTurn === Gameboard.getGameboardArea())
@@ -155,25 +156,27 @@ const Game = (function () {
 
         // (6) If all of the previous checks are negative, then the game is not over yet.
         return 0;
-    }
+    };
 
-    // Public properties
+    // (B) Public variables
 
     const getMarks = () => marks;
     const getFirstPlayingMark = () => firstPlayingMark;
 
-    const getPlayers = () => players;
-    const getPlayer = (playerNumber) => {
-        if (typeof playerNumber !== "number")
-            throw Error(`The value for player number cannot be of type \`${typeof playerNumber}. It must be of type \`number\`.`);
+    const getCurrentPlayerName = () => {
+        if (currentPlayer === null)
+            throw Error(`There are no information available regarding the current player.`);
 
-        if (playerNumber < 1 || playerNumber > marks.length)
-            throw Error(`Enter \`1\` for the first player, \`2\` for the second player, and so on... (You entered \`${playerNumber}\`).`);
-
-        return players[playerNumber - 1];
+        return currentPlayer.getName();
     };
 
-    const getCurrentPlayer = () => currentPlayer;
+    const getCurrentPlayerMark = () => {
+        if (currentPlayer === null)
+            throw Error(`There are no information available regarding the current player.`);
+
+        return currentPlayer.getMark();
+    };
+
     const getCurrentTurn = () => currentTurn;
 
     const start = (gameboardWidth, ...playerNames) => {
@@ -184,7 +187,7 @@ const Game = (function () {
 
             currentPlayer = null;
             currentTurn = 1;
-        }
+        };
 
         Gameboard.setGameboard(gameboardWidth);
 
@@ -207,28 +210,28 @@ const Game = (function () {
         if (endTurn) {
             const turnResult = markResult(currentPlayer.getMark(), rowNumber, columnNumber);
 
-            switch (turnResult) {
-                case 0:     // game is not over
-                    const currentPlayerIndex = players.indexOf(currentPlayer);
-                    currentPlayer = (currentPlayerIndex === players.length - 1 ? players[0] : players[currentPlayerIndex + 1]);
+            if (turnResult === 0) {
+                const currentPlayerIndex = players.indexOf(currentPlayer);
+                currentPlayer = (currentPlayerIndex === players.length - 1 ? players[0] : players[currentPlayerIndex + 1]);
 
-                    ++currentTurn;
+                ++currentTurn;
+            };
 
-                    break;
-                
-                case 1:     // game is over and current player wins
-                case 2:     // game is over and both players come to a draw
-                    // const playerNames = players.map(player => player.getName());
-                    // start(...playerNames);
-
-                    break;
-            }
-
+            // The value of `turnResult` will be used by `DisplayController` to decide whether to display game results or not, and what results to display.
             return turnResult;
-        }
+        };
     };
 
-    return Object.preventExtensions({ getMarks, getFirstPlayingMark, getPlayers, getPlayer, getCurrentPlayer, getCurrentTurn, start, playTurn, getGameboardWidth: Gameboard.getGameboardWidth, getGameboardArea: Gameboard.getGameboardArea });
+    return Object.preventExtensions({
+        // Public variables of `Game` (to `DisplayController`)
+        getMarks, getFirstPlayingMark,
+        getCurrentPlayerName, getCurrentPlayerMark, getCurrentTurn,
+        start,
+        playTurn,
+
+        // Public variables of `Gameboard` (to `DisplayController`)
+        getGameboardWidth: Gameboard.getGameboardWidth,
+    });
 })();
 
 const DisplayController = (function () {
@@ -248,7 +251,6 @@ const DisplayController = (function () {
     const firstPlayerNoteSpan = firstPlayerNote.querySelector(".mark-1");
 
     const playerNames = playerNamesSection.querySelector(".player-names");
-    
     const playerNameLabelInputTemplate = playerNames.querySelector("#player-name-label-input-template");
 
     const gameboard = gameboardSection.querySelector("#gameboard");
@@ -256,15 +258,13 @@ const DisplayController = (function () {
     const gameboardSizeInput = gameboardSizeSection.querySelector("#gameboard-size-input");
     const gameboardHeightSpan = gameboardSizeSection.querySelector("#gameboard-height");
 
-    const setGameboardHeight = () => gameboardHeightSpan.textContent = ` × ${gameboardSizeInput.value}`;
-
-    const newGameButton = form.querySelector("button[type='submit']");
-
     const footer = document.body.querySelector("footer");
 
     let playerNameInputs = null;
 
     // (A - 2) Event Functions
+
+    const setGameboardHeight = () => gameboardHeightSpan.textContent = ` × ${gameboardSizeInput.value}`;
 
     const startGame = () => {
         playerNameInputs = Array.from(form.querySelectorAll(".player-name-input"));
