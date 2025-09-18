@@ -184,9 +184,9 @@ const Game = (function () {
 
             currentPlayer = null;
             currentTurn = 1;
-
-            Gameboard.setGameboard(gameboardWidth);
         }
+
+        Gameboard.setGameboard(gameboardWidth);
 
         if (playerNames.length !== marks.length)
             throw Error(`The number of players must be exactly equal to ${marks.length} (You entered ${playerNames.length}).`);
@@ -218,8 +218,8 @@ const Game = (function () {
                 
                 case 1:     // game is over and current player wins
                 case 2:     // game is over and both players come to a draw
-                    const playerNames = players.map(player => player.getName());
-                    start(...playerNames);
+                    // const playerNames = players.map(player => player.getName());
+                    // start(...playerNames);
 
                     break;
             }
@@ -244,11 +244,11 @@ const DisplayController = (function () {
     const form = document.body.querySelector("#page-form");
     const [playerNamesSection, gameboardSection, gameboardSizeSection] = Array.from(form.querySelectorAll(".form-section"));
 
-    const playerNames = playerNamesSection.querySelector(".player-names");
-    
     const firstPlayerNote = form.querySelector("small#first-player-note");
     const firstPlayerNoteSpan = firstPlayerNote.querySelector(".mark-1");
 
+    const playerNames = playerNamesSection.querySelector(".player-names");
+    
     const playerNameLabelInputTemplate = playerNames.querySelector("#player-name-label-input-template");
 
     const gameboard = gameboardSection.querySelector("#gameboard");
@@ -259,6 +259,8 @@ const DisplayController = (function () {
     const setGameboardHeight = () => gameboardHeightSpan.textContent = ` × ${gameboardSizeInput.value}`;
 
     const newGameButton = form.querySelector("button[type='submit']");
+
+    const footer = document.body.querySelector("footer");
 
     let playerNameInputs = null;
 
@@ -274,10 +276,23 @@ const DisplayController = (function () {
     };
 
     const showGameboard = () => {
+        document.body.querySelector("main").classList.add("game-started");
+
         const gameboardWidth = Game.getGameboardWidth();
 
         // The HTML attribute `hidden` is not a boolean attribute, so `gameboard.setAttribute("hidden", "false");` does not work.
         gameboardSection.hidden = false;
+
+        const gameboardGridTemplateRowsAndColumns = `repeat(${gameboardWidth}, 1fr)`;
+
+        gameboard.style.display = "grid";
+        gameboard.style.gridTemplateRows = gameboardGridTemplateRowsAndColumns;
+
+        const gameboardRow = document.createElement("div");
+        gameboardRow.setAttribute("class", "gameboard-row");
+        
+        gameboardRow.style.display = "grid";
+        gameboardRow.style.gridTemplateColumns = gameboardGridTemplateRowsAndColumns;
 
         const gameboardCell = document.createElement("div");
         gameboardCell.setAttribute("class", "gameboard-cell");
@@ -285,17 +300,24 @@ const DisplayController = (function () {
         // The element is focused after all elements that have a positive integer value for `tabindex` or otherwise precede it in document order. 
         gameboardCell.setAttribute("tabindex", "0");
 
-        for (let i = 1; i <= Game.getGameboardArea(); ++i) {
-            const cell = gameboardCell.cloneNode(true);
+        for (let i = 1; i <= gameboardWidth; ++i) {
+            const row = gameboardRow.cloneNode(true);
 
-            gameboard.appendChild(cell);
+            for (let j = 1; j <= gameboardWidth; ++j) {
+                const cell = gameboardCell.cloneNode(true);
+
+                row.appendChild(cell);
+            }
+
+            gameboard.appendChild(row.cloneNode(true));
         }
 
-        const gameboardGridTemplateRowsAndColumns = `repeat(${gameboardWidth}, 1fr)`;
+        // (?) The first line below successfully sets the width to `3ch` (for a 3-by-3 gameboard), but the one after it never works as expected.
 
-        gameboard.style.display = "grid";
-        gameboard.style.gridTemplateRows = gameboardGridTemplateRowsAndColumns;
-        gameboard.style.gridTemplateColumns = gameboardGridTemplateRowsAndColumns;
+        gameboard.style.minWidth = `${gameboardWidth}ch`;
+        gameboard.style.width = `max(${getComputedStyle(gameboard).height}, ${gameboardWidth}ch})`;
+
+        footer.hidden = true;
     }
 
     const setForm = (gameStage) => {
@@ -359,6 +381,8 @@ const DisplayController = (function () {
             label.innerHTML = `<span class="mark-${playerNumber}">${mark}</span> is `;
 
             setGameboardHeight();
+
+            gameboardSizeInput.addEventListener('input', setGameboardHeight);
 
             playerNames.appendChild(documentFragment);
         });

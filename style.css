@@ -145,6 +145,11 @@ Ensure the index is enclosed within parentheses, as this prevents finding other 
 
 /* (0) General styles */
 
+* {
+  margin: 0;
+  padding: 0;
+}
+
 *, *:before, *:after {
   box-sizing: border-box;
 }
@@ -258,13 +263,25 @@ h1 {
   font-family: var(--title-font);
   font-size: 10rem;
 
-  margin: 16px 0;
+  margin: 0;
 }
 
 /* (2) Main styles */
 
 main {
+  display: grid;
   align-content: center;
+
+  row-gap: 32px;
+}
+
+main.game-started {
+  /* Make page form fill the entire height of the main element when the game starts. */
+  grid-template-rows: 1fr;
+}
+
+main.game-started > #page-form {
+  padding: 32px 0;
 }
 
 #page-form {
@@ -310,10 +327,34 @@ main {
   width: 9ch;
 }
 
+.gameboard-section:not([hidden]) {
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+}
+
+.gameboard-section:not([hidden]) > #gameboard {
+  border: 2px solid var(--main-color);
+
+  font-family: var(--user-defined-content-font);
+  font-size: 10rem;
+
+  height: 100%;
+}
+
+.gameboard-section:not([hidden]) .gameboard-row:not(:last-child) {
+  border-bottom: 2px solid var(--main-color);
+}
+
+.gameboard-section:not([hidden]) .gameboard-cell:not(:last-child) {
+  border-right: 2px solid var(--main-color);
+}
+
 /* (3) Footer styles */
 
 footer {
-  padding: 32px 0;
+  padding-bottom: 28px;
 }
 
 .credit {
