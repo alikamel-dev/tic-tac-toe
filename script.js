@@ -266,6 +266,20 @@ const DisplayController = (function () {
 
     const setGameboardHeight = () => gameboardHeightSpan.textContent = ` × ${gameboardSizeInput.value}`;
 
+    const highlightCurrentPlayer = () => {
+        const currentPlayerName = Game.getCurrentPlayerName();
+
+        playerNameInputs.forEach(playerNameInput => {
+            const parentContainer = playerNameInput.closest("div");
+
+            if (playerNameInput.value === currentPlayerName) {
+                const playerColor = getComputedStyle(playerNameInput).color;
+                
+                parentContainer.style.border = `2px solid ${playerColor}`;
+            } else parentContainer.style.border = `none`;
+        });
+    };
+
     const startGame = () => {
         playerNameInputs = Array.from(form.querySelectorAll(".player-name-input"));
         const playerNames = playerNameInputs.map(playerNameInput => playerNameInput.value);
@@ -273,6 +287,7 @@ const DisplayController = (function () {
         const gameboardWidth = gameboardSizeInput.value;
 
         Game.start(gameboardWidth, ...playerNames);
+        highlightCurrentPlayer();
     };
 
     const showGameboard = () => {

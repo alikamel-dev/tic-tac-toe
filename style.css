@@ -301,6 +301,10 @@ main.game-started > #page-form {
   gap: 128px;
 }
 
+.player-label-input-container {
+  padding: 16px;
+}
+
 #first-player-note:not([hidden]) {
   display: inline-block;
 
