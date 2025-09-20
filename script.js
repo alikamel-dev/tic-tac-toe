@@ -266,17 +266,30 @@ const DisplayController = (function () {
 
     const setGameboardHeight = () => gameboardHeightSpan.textContent = ` × ${gameboardSizeInput.value}`;
 
-    const highlightCurrentPlayer = () => {
+    // TODO: Cache the data of the current players instead of fetching them on each turn.
+
+    const getCurrentPlayerData = () => {
         const currentPlayerName = Game.getCurrentPlayerName();
+        const currentPlayerMark = Game.getCurrentPlayerMark();
+
+        const playerNameInput = playerNameInputs.find(playerNameInput => playerNameInput.value === currentPlayerName);
+
+        const currentPlayerColor = getComputedStyle(playerNameInput).color;
+
+        return Object.freeze({
+            name: currentPlayerName,
+            mark: currentPlayerMark,
+            color: currentPlayerColor,
+            input: playerNameInput,
+        });
+    };
+
+    const highlightCurrentPlayer = () => {
+        const currentPlayer = getCurrentPlayerData();
 
         playerNameInputs.forEach(playerNameInput => {
             const parentContainer = playerNameInput.closest("div");
-
-            if (playerNameInput.value === currentPlayerName) {
-                const playerColor = getComputedStyle(playerNameInput).color;
-                
-                parentContainer.style.border = `2px solid ${playerColor}`;
-            } else parentContainer.style.border = `none`;
+            parentContainer.style.border = (playerNameInput === currentPlayer.input) ? `2px solid ${currentPlayer.color}` : `none`;
         });
     };
 
