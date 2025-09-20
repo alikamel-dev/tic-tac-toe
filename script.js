@@ -264,7 +264,12 @@ const DisplayController = (function () {
 
     let playerNameInputs = [];
 
-    // (A - 2) Event Functions
+    // (A - 2) Variables
+
+    // Holds the value returned by `Game.playTurn`. Initialized to `0` so that the following event listener works as intended on the first turn.
+    let turnResult = 0;
+
+    // (A - 3) Event Functions
 
     const setGameboardHeight = () => gameboardHeightSpan.textContent = ` × ${gameboardSizeInput.value}`;
 
@@ -309,6 +314,9 @@ const DisplayController = (function () {
     let gameboardRows = [];
 
     const showGameboard = () => {
+        // Removes all the child nodes of the gameboard, without removing their event listeners (which do not exist).
+        gameboard.innerHTML = "";
+
         document.body.querySelector("main").classList.add("game-started");
 
         const gameboardWidth = Game.getGameboardWidth();
@@ -371,20 +379,22 @@ const DisplayController = (function () {
         const allInputs = [...playerNameInputs, gameboardSizeInput];
 
         allInputs.forEach(input => {
-            input.setAttribute("readonly", `${areInputsReadOnly}`);
+            input.readonly = areInputsReadOnly;
             input.setAttribute("tabindex", `${tabIndex}`);
         });
 
+        // Game Intro and First Player Note are meant to be displayed only once after page load.
         intro.hidden = true;
-
-        firstPlayerNote.hidden = areInputsReadOnly;
-        gameboardSizeSection.hidden = areInputsReadOnly;
+        firstPlayerNote.hidden = true;
     };
 
     const doOnNewGame = () => {
         startGame();
         showGameboard();
         setForm("gameStart");
+
+        // Reset `turnResult` to `0` to allow players to mark the new gameboard.
+        turnResult = 0;
     };
 
     form.addEventListener('submit', (event) => {
@@ -393,9 +403,6 @@ const DisplayController = (function () {
 
         doOnNewGame();
     });
-
-    // Holds the value returned by `Game.playTurn`. Initialized to `0` so that the following event listener works as intended on the first turn.
-    let turnResult = 0;
 
     gameboard.addEventListener('click', (event) => {
         if (turnResult !== 0)
@@ -436,6 +443,8 @@ const DisplayController = (function () {
                 gameOverText.innerHTML += `Neither player wins...`;
 
             form.insertBefore(gameOverText, newGameButton.closest("form > *"));
+
+            setForm("gameEnd");
 
         } else highlightCurrentPlayer();
     });
