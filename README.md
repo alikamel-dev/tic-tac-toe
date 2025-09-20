@@ -42,6 +42,10 @@ Each player should click on the cell of the gameboard they wish to mark.
 
 5. The game ends when one player marks three cells in a row, column, or a diagonal, in which case the said player is the winner, and their name is displayed below in the "winner" field, or when the gameboard is full of marks without either player managing to meet the aforementioned condition, in which case they come to a draw and "nobody" is displayed in the "winner" field.
 
+6. After the game ends, you can edit the player names and gameboard size again and click "New Game" to start a new game with the new settings.
+<br>
+You can also start a new game in the middle of one in progress, but without editing player names or gameboard size.
+
 ## Contributing to or Forking the project
 
 ### Contribution
