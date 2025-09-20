@@ -395,6 +395,13 @@ const DisplayController = (function () {
 
         // Reset `turnResult` to `0` to allow players to mark the new gameboard.
         turnResult = 0;
+
+        // Remove Game Over text
+        const gameOverText = form.querySelector(".game-over-text");
+
+        // `Node.removeChild(null)` throws a `TypeError`
+        if (gameOverText !== null)
+            form.removeChild(gameOverText);
     };
 
     form.addEventListener('submit', (event) => {
