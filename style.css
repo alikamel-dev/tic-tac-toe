@@ -95,7 +95,7 @@
   --mark-1-color: #ED0A3F;
   --mark-2-color: #0066FF;
 
-  --placeholder-color: #8B8680;
+  --draw-color: #8B8680;
 
   /* Fonts */
 
@@ -178,6 +178,12 @@ Ensure the index is enclosed within parentheses, as this prevents finding other 
   border-color: var(--mark-2-color);
 }
 
+.draw, .gameboard-section:not([hidden]) > #gameboard.draw {
+  color: var(--draw-color);
+
+  border-color: var(--draw-color);
+}
+
 html {
   height: 100vh;
 }
@@ -254,7 +260,7 @@ input {
 }
 
 input::placeholder {
-  color: var(--placeholder-color);
+  color: var(--draw-color);
 }
 
 /* (1) Header styles */

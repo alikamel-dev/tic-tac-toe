@@ -507,7 +507,14 @@ const DisplayController = (function () {
                 gameResultsLabelAndInput.forEach(element => element.classList.add(`mark-${currentPlayer.order}`));
 
                 gameResultsContainer.querySelector("input").value = currentPlayer.name;
-            } else gameResultsContainer.querySelector("input").value = "nobody";
+            } else {
+                gameboard.classList.add("draw");
+                Array.from(gameboard.querySelectorAll("*")).forEach(element => element.style.borderColor = getComputedStyle(document.documentElement).getPropertyValue("--draw-color"));
+
+                gameResultsLabelAndInput.forEach(element => element.classList.add("draw"));
+
+                gameResultsContainer.querySelector("input").value = "nobody";
+            }
 
             setForm("gameEnd");
 
