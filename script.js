@@ -387,9 +387,6 @@ const DisplayController = (function () {
 
         const gameboardCell = document.createElement("div");
         gameboardCell.setAttribute("class", "gameboard-cell");
-        // `tabindex=0` makes the element it is set on focusable in sequential keyboard navigation ("tabbing").
-        // The element is focused after all elements that have a positive integer value for `tabindex` or otherwise precede it in document order. 
-        gameboardCell.setAttribute("tabindex", "0");
 
         for (let i = 1; i <= gameboardWidth; ++i) {
             const row = gameboardRow.cloneNode(true);
@@ -429,15 +426,9 @@ const DisplayController = (function () {
 
         const areInputsReadOnly = !gameStage;
 
-        // A negative value for `tabindex` makes the element the attribute-value pair is set on not focusable in sequential keyboard navigation ("tabbing").
-        const tabIndex = areInputsReadOnly ? "-1" : "0";
-
         const allInputs = [...playerNameInputs, gameboardSizeInput];
 
-        allInputs.forEach(input => {
-            input.readOnly = areInputsReadOnly;
-            input.setAttribute("tabindex", `${tabIndex}`);
-        });
+        allInputs.forEach(input => input.readOnly = areInputsReadOnly);
 
         // Game Intro and First Player Note are meant to be displayed only once after page load.
         intro.hidden = true;
