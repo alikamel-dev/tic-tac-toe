@@ -342,7 +342,7 @@ main.game-started > #page-form {
   border: 2px solid var(--main-color);
 
   font-family: var(--user-defined-content-font);
-  font-size: 10rem;
+  font-size: 5rem;
 
   height: 100%;
 }
@@ -353,6 +353,23 @@ main.game-started > #page-form {
 
 .gameboard-section:not([hidden]) .gameboard-cell:not(:last-child) {
   border-right: 2px solid var(--main-color);
+}
+
+.gameboard-section:not([hidden]) .gameboard-cell {
+  display: grid;
+  place-content: center;
+
+  box-sizing: content-box;
+
+  padding: 16px;
+
+  /* Makes the cursor not change on hovering over text, and makes text non-selectable, so that the user may not select the invisible text placed in empty cells. */
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.gameboard-section:not([hidden]) .gameboard-cell.marked {
+
 }
 
 /* (3) Footer styles */

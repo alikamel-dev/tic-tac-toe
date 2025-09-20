@@ -382,16 +382,20 @@ const DisplayController = (function () {
             for (let j = 1; j <= gameboardWidth; ++j) {
                 const cell = gameboardCell.cloneNode(true);
 
+                // Used to force gameboard cells to have the width and height of a single character.
+
+                cell.textContent = "X";
+                cell.style.color = "transparent";
+
                 row.appendChild(cell);
             };
 
             gameboard.appendChild(row.cloneNode(true));
         };
 
-        // (?) The first line below successfully sets the width to `3ch` (for a 3-by-3 gameboard), but the one after it never works as expected.
+        const maxDimension = Math.max(parseFloat(getComputedStyle(gameboard).width), parseFloat(getComputedStyle(gameboard).height));
 
-        gameboard.style.minWidth = `${gameboardWidth}ch`;
-        gameboard.style.width = `max(${getComputedStyle(gameboard).height}, ${gameboardWidth}ch})`;
+        gameboard.style.width = gameboard.style.height = `${maxDimension}px`;
 
         footer.hidden = true;
 
