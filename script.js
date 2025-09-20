@@ -260,7 +260,9 @@ const DisplayController = (function () {
 
     const footer = document.body.querySelector("footer");
 
-    let playerNameInputs = null;
+    const newGameButton = form.querySelector("button[type='submit']");
+
+    let playerNameInputs = [];
 
     // (A - 2) Event Functions
 
@@ -374,7 +376,9 @@ const DisplayController = (function () {
         });
 
         intro.hidden = true;
+
         firstPlayerNote.hidden = areInputsReadOnly;
+        gameboardSizeSection.hidden = areInputsReadOnly;
     };
 
     const doOnNewGame = () => {
@@ -390,7 +394,13 @@ const DisplayController = (function () {
         doOnNewGame();
     });
 
+    // Holds the value returned by `Game.playTurn`. Initialized to `0` so that the following event listener works as intended on the first turn.
+    let turnResult = 0;
+
     gameboard.addEventListener('click', (event) => {
+        if (turnResult !== 0)
+            return;
+
         const gameboardCell = event.target;
 
         if (!gameboardCell.classList.contains("gameboard-cell"))
@@ -411,9 +421,23 @@ const DisplayController = (function () {
         const rowNumber = gameboardRows.indexOf(gameboardRow);
         const columnNumber = gameboardRowCells.indexOf(gameboardCell);
 
-        Game.playTurn(rowNumber, columnNumber);
+        turnResult = Game.playTurn(rowNumber, columnNumber);
 
-        highlightCurrentPlayer();
+        if (turnResult !== 0) {
+            const gameOverText = document.createElement("p");
+            gameOverText.setAttribute("class", "game-over-text");
+
+            gameOverText.innerHTML = "Game Over! ";
+
+            if (turnResult === 1) {
+                const currentPlayer = getCurrentPlayerData();
+                gameOverText.innerHTML += `<span style="color: ${currentPlayer.color}">${currentPlayer.name}</span> (<span style="color: ${currentPlayer.color}">${currentPlayer.mark}</span>) wins!`;
+            } else 
+                gameOverText.innerHTML += `Neither player wins...`;
+
+            form.insertBefore(gameOverText, newGameButton.closest("form > *"));
+
+        } else highlightCurrentPlayer();
     });
 
     // Public variables
