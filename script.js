@@ -264,6 +264,10 @@ const DisplayController = (function () {
 
     let playerNameInputs = [];
 
+    const playerNamesMustBeDifferentNote = document.createElement("p");
+    playerNamesMustBeDifferentNote.textContent = "Player names must be different!";
+    playerNamesMustBeDifferentNote.style.color = "#FF0000";
+
     // (A - 2) Variables
 
     // Holds the value returned by `Game.playTurn`. Initialized to `0` so that the following event listener works as intended on the first turn.
@@ -302,13 +306,44 @@ const DisplayController = (function () {
 
     const startGame = () => {
         playerNameInputs = Array.from(form.querySelectorAll(".player-name-input"));
+        const playerNames = playerNameInputs.map(playerNameInput => {
+            playerNameInput.value = playerNameInput.value.trim();
 
-        const playerNames = playerNameInputs.map(playerNameInput => playerNameInput.value);
-        const gameboardWidth = parseInt(gameboardSizeInput.value);
+            return playerNameInput.value;
+        });
 
-        Game.start(gameboardWidth, ...playerNames);
+        // Since this script uses player names as search queries, each player name must be unique to prevent errors.
 
-        highlightCurrentPlayer();
+        let arePlayerNamesNotUnique = true;
+
+        playerNames.forEach((playerName, playerIndex) => {
+            if (playerIndex === playerNames.length - 1)
+                return;
+
+            for (let i = playerIndex + 1; i < playerNames.length; ++i) {
+                arePlayerNamesNotUnique = (playerName.toLowerCase() === playerNames[i].toLowerCase());
+
+                if (arePlayerNamesNotUnique) {
+                    form.insertBefore(playerNamesMustBeDifferentNote, gameboardSection);
+
+                    return;
+                };
+            };
+        });
+
+        if (!arePlayerNamesNotUnique) {
+            // Remove the warning regarding player names being the same if it exists
+            if (form.contains(playerNamesMustBeDifferentNote))
+                form.removeChild(playerNamesMustBeDifferentNote);
+
+            const gameboardWidth = parseInt(gameboardSizeInput.value);
+
+            Game.start(gameboardWidth, ...playerNames);
+
+            highlightCurrentPlayer();
+        };
+
+        return arePlayerNamesNotUnique;
     };
 
     let gameboardRows = [];
@@ -389,7 +424,11 @@ const DisplayController = (function () {
     };
 
     const doOnNewGame = () => {
-        startGame();
+        const arePlayerNamesNotUnique = startGame();
+
+        if (arePlayerNamesNotUnique)
+            return;
+
         showGameboard();
         setForm("gameStart");
 
