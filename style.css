@@ -369,6 +369,8 @@ main.game-started > #page-form {
 
   padding: 16px;
 
+  cursor: pointer;
+
   /* Makes the cursor not change on hovering over text, and makes text non-selectable, so that the user may not select the invisible text placed in empty cells. */
   -webkit-user-select: none;
   user-select: none;

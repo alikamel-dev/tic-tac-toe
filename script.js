@@ -483,6 +483,8 @@ const DisplayController = (function () {
 
         const currentPlayer = getCurrentPlayerData();
 
+        gameboardCell.style.opacity = "1.0";
+
         gameboardCell.textContent = currentPlayer.mark;
         gameboardCell.style.color = currentPlayer.color;
         gameboardCell.classList.add("marked");
@@ -519,6 +521,39 @@ const DisplayController = (function () {
             setForm("gameEnd");
 
         } else highlightCurrentPlayer();
+    });
+
+    gameboard.addEventListener('mouseover', (event) => {
+        const gameboardCell = event.target;
+
+        if (!gameboardCell.classList.contains("gameboard-cell"))
+            return;
+
+        if (turnResult !== 0 || gameboardCell.classList.contains("marked")) {
+            gameboardCell.style.cursor = "not-allowed";
+
+            return;
+        };
+
+        gameboardCell.style.opacity = "0.5";
+
+        const currentPlayer = getCurrentPlayerData();
+
+        gameboardCell.textContent = currentPlayer.mark;
+        gameboardCell.style.color = currentPlayer.color;
+    });
+
+    gameboard.addEventListener('mouseout', (event) => {
+        const gameboardCell = event.target;
+
+        if (!gameboardCell.classList.contains("gameboard-cell") || turnResult !== 0)
+            return;
+
+        gameboardCell.style.opacity = "1.0";
+
+        if (!gameboardCell.classList.contains("marked")) {
+            gameboardCell.textContent = "";
+        };
     });
 
     // Public variables
