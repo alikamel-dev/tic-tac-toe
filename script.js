@@ -297,12 +297,14 @@ const DisplayController = (function () {
         playerNameInputs = Array.from(form.querySelectorAll(".player-name-input"));
 
         const playerNames = playerNameInputs.map(playerNameInput => playerNameInput.value);
-        const gameboardWidth = gameboardSizeInput.value;
+        const gameboardWidth = parseInt(gameboardSizeInput.value);
 
         Game.start(gameboardWidth, ...playerNames);
 
         highlightCurrentPlayer();
     };
+
+    let gameboardRows = [];
 
     const showGameboard = () => {
         document.body.querySelector("main").classList.add("game-started");
@@ -347,6 +349,8 @@ const DisplayController = (function () {
         gameboard.style.width = `max(${getComputedStyle(gameboard).height}, ${gameboardWidth}ch})`;
 
         footer.hidden = true;
+
+        gameboardRows = Array.from(gameboard.children);
     };
 
     const setForm = (gameStage) => {
@@ -384,6 +388,32 @@ const DisplayController = (function () {
         event.preventDefault();
 
         doOnNewGame();
+    });
+
+    gameboard.addEventListener('click', (event) => {
+        const gameboardCell = event.target;
+
+        if (!gameboardCell.classList.contains("gameboard-cell"))
+            return;
+
+        if (gameboardCell.classList.contains("marked"))
+            return;
+
+        const currentPlayer = getCurrentPlayerData();
+
+        gameboardCell.textContent = currentPlayer.mark;
+        gameboardCell.style.color = currentPlayer.color;
+        gameboardCell.classList.add("marked");
+
+        const gameboardRow = gameboardCell.closest(".gameboard-row");
+        const gameboardRowCells = Array.from(gameboardRow.children);
+
+        const rowNumber = gameboardRows.indexOf(gameboardRow);
+        const columnNumber = gameboardRowCells.indexOf(gameboardCell);
+
+        Game.playTurn(rowNumber, columnNumber);
+
+        highlightCurrentPlayer();
     });
 
     // Public variables
