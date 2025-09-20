@@ -95,7 +95,7 @@
   --mark-1-color: #ED0A3F;
   --mark-2-color: #0066FF;
 
-  --draw-color: #8B8680;
+  --placeholder-color: #8B8680;
 
   /* Fonts */
 
@@ -158,7 +158,7 @@ Ensure the index is enclosed within parentheses, as this prevents finding other 
   outline: none;
 }
 
-*:not(p, small, .italic) > [class^="mark"] {
+*:not(p, small, .italic, .game-results) > [class^="mark"] {
   font-family: var(--title-font);
 }
 
@@ -166,13 +166,13 @@ Ensure the index is enclosed within parentheses, as this prevents finding other 
   font-style: italic;
 }
 
-.mark-1 {
+.mark-1, .gameboard-section:not([hidden]) > #gameboard.mark-1 {
   color: var(--mark-1-color);
 
   border-color: var(--mark-1-color);
 }
 
-.mark-2 {
+.mark-2, .gameboard-section:not([hidden]) > #gameboard.mark-2 {
   color: var(--mark-2-color);
 
   border-color: var(--mark-2-color);
@@ -254,7 +254,7 @@ input {
 }
 
 input::placeholder {
-  color: var(--draw-color);
+  color: var(--placeholder-color);
 }
 
 /* (1) Header styles */
@@ -366,10 +366,6 @@ main.game-started > #page-form {
   /* Makes the cursor not change on hovering over text, and makes text non-selectable, so that the user may not select the invisible text placed in empty cells. */
   -webkit-user-select: none;
   user-select: none;
-}
-
-.gameboard-section:not([hidden]) .gameboard-cell.marked {
-
 }
 
 /* (3) Footer styles */

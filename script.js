@@ -177,6 +177,13 @@ const Game = (function () {
         return currentPlayer.getMark();
     };
 
+    const getCurrentPlayerOrder = () => {
+        if (currentPlayer === null)
+            throw Error(`There are no information available regarding the current player.`);
+
+        return players.indexOf(currentPlayer) + 1;
+    };
+
     const getCurrentTurn = () => currentTurn;
 
     const start = (gameboardWidth, ...playerNames) => {
@@ -225,7 +232,7 @@ const Game = (function () {
     return Object.preventExtensions({
         // Public variables of `Game` (to `DisplayController`)
         getMarks, getFirstPlayingMark,
-        getCurrentPlayerName, getCurrentPlayerMark, getCurrentTurn,
+        getCurrentPlayerName, getCurrentPlayerMark, getCurrentPlayerOrder, getCurrentTurn,
         start,
         playTurn,
 
@@ -260,6 +267,9 @@ const DisplayController = (function () {
 
     const footer = document.body.querySelector("footer");
 
+    const gameResultsContainer = form.querySelector(".game-results");
+    const gameResultsLabelAndInput = Array.from(gameResultsContainer.children);
+
     const newGameButton = form.querySelector("button[type='submit']");
 
     let playerNameInputs = [];
@@ -282,6 +292,7 @@ const DisplayController = (function () {
     const getCurrentPlayerData = () => {
         const currentPlayerName = Game.getCurrentPlayerName();
         const currentPlayerMark = Game.getCurrentPlayerMark();
+        const currentPlayerOrder = Game.getCurrentPlayerOrder();
 
         const playerNameInput = playerNameInputs.find(playerNameInput => playerNameInput.value === currentPlayerName);
 
@@ -290,6 +301,8 @@ const DisplayController = (function () {
         return Object.freeze({
             name: currentPlayerName,
             mark: currentPlayerMark,
+            order: currentPlayerOrder,
+
             color: currentPlayerColor,
             input: playerNameInput,
         });
@@ -351,6 +364,8 @@ const DisplayController = (function () {
     const showGameboard = () => {
         // Removes all the child nodes of the gameboard, without removing their event listeners (which do not exist).
         gameboard.innerHTML = "";
+
+        gameboard.classList.remove(Array.from(gameboard.classList).pop());
 
         document.body.querySelector("main").classList.add("game-started");
 
@@ -418,13 +433,15 @@ const DisplayController = (function () {
         const allInputs = [...playerNameInputs, gameboardSizeInput];
 
         allInputs.forEach(input => {
-            input.readonly = areInputsReadOnly;
+            input.readOnly = areInputsReadOnly;
             input.setAttribute("tabindex", `${tabIndex}`);
         });
 
         // Game Intro and First Player Note are meant to be displayed only once after page load.
         intro.hidden = true;
         firstPlayerNote.hidden = true;
+
+        gameResultsContainer.hidden = false;
     };
 
     const doOnNewGame = () => {
@@ -439,12 +456,8 @@ const DisplayController = (function () {
         // Reset `turnResult` to `0` to allow players to mark the new gameboard.
         turnResult = 0;
 
-        // Remove Game Over text
-        const gameOverText = form.querySelector(".game-over-text");
-
-        // `Node.removeChild(null)` throws a `TypeError`
-        if (gameOverText !== null)
-            form.removeChild(gameOverText);
+        gameResultsLabelAndInput.forEach(element => element.classList.remove(Array.from(element.classList).pop()));
+        gameResultsContainer.querySelector("input").value = "";
     };
 
     form.addEventListener('submit', (event) => {
@@ -481,18 +494,18 @@ const DisplayController = (function () {
         turnResult = Game.playTurn(rowNumber, columnNumber);
 
         if (turnResult !== 0) {
-            const gameOverText = document.createElement("p");
-            gameOverText.setAttribute("class", "game-over-text");
-
-            gameOverText.innerHTML = "Game Over! ";
-
             if (turnResult === 1) {
                 const currentPlayer = getCurrentPlayerData();
-                gameOverText.innerHTML += `<span style="color: ${currentPlayer.color}">${currentPlayer.name}</span> (<span style="color: ${currentPlayer.color}">${currentPlayer.mark}</span>) wins!`;
-            } else 
-                gameOverText.innerHTML += `Neither player wins...`;
 
-            form.insertBefore(gameOverText, newGameButton.closest("form > *"));
+                gameboard.classList.add(`mark-${currentPlayer.order}`);
+
+                // `gameboard.children` returns only the direct child element nodes of `gameboard`.
+                Array.from(gameboard.querySelectorAll("*")).forEach(element => element.style.borderColor = currentPlayer.color);
+
+                gameResultsLabelAndInput.forEach(element => element.classList.add(`mark-${currentPlayer.order}`));
+
+                gameResultsContainer.querySelector("input").value = currentPlayer.name;
+            } else gameResultsContainer.querySelector("input").value = "nobody";
 
             setForm("gameEnd");
 
