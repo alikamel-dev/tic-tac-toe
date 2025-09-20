@@ -408,6 +408,8 @@ const DisplayController = (function () {
             gameboard.appendChild(row.cloneNode(true));
         };
 
+        gameboard.style.width = gameboard.style.height = `auto`;
+
         const maxDimension = Math.max(parseFloat(getComputedStyle(gameboard).width), parseFloat(getComputedStyle(gameboard).height));
 
         gameboard.style.width = gameboard.style.height = `${maxDimension}px`;
