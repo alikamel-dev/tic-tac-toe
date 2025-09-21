@@ -564,6 +564,7 @@ const DisplayController = (function () {
             input.setAttribute("id", `player-${playerNumber}-name-input`);
             input.classList.add(`mark-${playerNumber}`);
             input.setAttribute("title", `Enter a name for the player who is going to play as (${mark})`);
+            input.setAttribute("value", `Player ${mark}`);
 
             label.setAttribute("for", input.getAttribute("id"));
             label.innerHTML = `<span class="mark-${playerNumber}">${mark}</span> is `;

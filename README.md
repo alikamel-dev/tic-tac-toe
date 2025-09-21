@@ -24,7 +24,7 @@ And finally, If you like my project, please support me by **starring its reposit
 
 #### How to Play
 
-1. Enter the names to be used for the players playing as _X_ and _O_. <br> There is no restriction on the types of characters used in player names, but **a player name may not consist solely of whitespace characters**, and **the two players may not have the same name, two names consisting of the same characters but with different letter cases, or two names only differing in the number of leading/trailing spaces**. <br><br> _The player whose mark is **X** plays first_.
+1. Enter the names to be used for the players playing as _X_ and _O_ (or simply leave the default names as-is) <br> There is no restriction on the types of characters used in player names, but **a player name may not consist solely of whitespace characters**, and **the two players may not have the same name, two names consisting of the same characters but with different letter cases, or two names only differing in the number of leading/trailing spaces**. <br><br> _The player whose mark is **X** plays first_.
 
 2. You may also set the gameboard size (that is, the number of rows and columns of the gameboard), or leave it at the default value of `3` (3 rows and 3 columns, the gameboard of a traditional tic-tac-toe game). <br> Gameboard size can be any integer value from `3` to `10` (inclusive), though larger sizes may cause the page to overflow the browser viewport, forcing players to scroll up and down to reach desired cells.
 
