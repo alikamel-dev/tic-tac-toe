@@ -275,7 +275,7 @@ const DisplayController = (function () {
     let playerNameInputs = [];
 
     const playerNamesMustBeDifferentNote = document.createElement("p");
-    playerNamesMustBeDifferentNote.textContent = "Player names must be different!";
+    playerNamesMustBeDifferentNote.textContent = "Player names must be different, and cannot consist of only whitespaces!";
     playerNamesMustBeDifferentNote.style.color = "#FF0000";
 
     // (A - 2) Variables
@@ -327,16 +327,16 @@ const DisplayController = (function () {
 
         // Since this script uses player names as search queries, each player name must be unique to prevent errors.
 
-        let arePlayerNamesNotUnique = true;
+        let arePlayerNamesInvalid = true;
 
         playerNames.forEach((playerName, playerIndex) => {
             if (playerIndex === playerNames.length - 1)
                 return;
 
             for (let i = playerIndex + 1; i < playerNames.length; ++i) {
-                arePlayerNamesNotUnique = (playerName.toLowerCase() === playerNames[i].toLowerCase());
+                arePlayerNamesInvalid = (playerName.toLowerCase() === playerNames[i].toLowerCase()) || (playerName.trim() === "");
 
-                if (arePlayerNamesNotUnique) {
+                if (arePlayerNamesInvalid) {
                     form.insertBefore(playerNamesMustBeDifferentNote, gameboardSection);
 
                     return;
@@ -344,7 +344,7 @@ const DisplayController = (function () {
             };
         });
 
-        if (!arePlayerNamesNotUnique) {
+        if (!arePlayerNamesInvalid) {
             // Remove the warning regarding player names being the same if it exists
             if (form.contains(playerNamesMustBeDifferentNote))
                 form.removeChild(playerNamesMustBeDifferentNote);
@@ -356,7 +356,7 @@ const DisplayController = (function () {
             highlightCurrentPlayer();
         };
 
-        return arePlayerNamesNotUnique;
+        return arePlayerNamesInvalid;
     };
 
     let gameboardRows = [];
