@@ -158,6 +158,10 @@ Ensure the index is enclosed within parentheses, as this prevents finding other 
   outline: none;
 }
 
+*::selection {
+  background-color: hsla(60, 100%, 45%, 0.85);
+}
+
 *:not(p, small, .italic, .game-results) > [class^="mark"] {
   font-family: var(--title-font);
 }

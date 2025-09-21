@@ -78,12 +78,15 @@ The following are the colors used for this project. Each link leads to the respe
 
 [Crayola](https://www.crayola.com) colors have been obtained from this [list of Crayola crayon colors on Wikipedia](https://en.wikipedia.org/wiki/List_of_Crayola_crayon_colors#Standard_colors).
 
-| Type of text                 | Color                                                                                          |
+| Type of item                 | Color                                                                                          |
 |------------------------------|------------------------------------------------------------------------------------------------|
 | Main text                    | [`#000000`](https://www.colorhexa.com/000000) (Black)                                          |
 | Player 'X' mark              | [`#ED0A3F`](https://www.colorhexa.com/ED0A3F) ([Crayola](https://www.crayola.com/) Red)        |
 | Player 'O' mark              | [`#0066FF`](https://www.colorhexa.com/0066FF) ([Crayola](https://www.crayola.com/) Blue (III)) |
-| Draw/Input placeholder color | [`8B8680`](https://www.colorhexa.com/8B8680) ([Crayola](https://www.crayola.com/) Gray)        |
+| Draw/Input placeholder       | [`8B8680`](https://www.colorhexa.com/8B8680) ([Crayola](https://www.crayola.com/) Gray)        |
+| Selection background         | [`hsl(60, 100%, 45%)`](https://www.colorhexa.com/E6E600) with `85%` opacity                  |
+
+The selection background color is based on _Maximum Yellow_ Crayola color ([`#FAFA37`](https://www.colorhexa.com/FAFA37)), with modifications to saturation, lightness, and opacity.
 
 ## Acknowledgements
 
