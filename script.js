@@ -426,9 +426,7 @@ const DisplayController = (function () {
 
         const areInputsReadOnly = !gameStage;
 
-        const allInputs = [...playerNameInputs, gameboardSizeInput];
-
-        allInputs.forEach(input => input.readOnly = areInputsReadOnly);
+        playerNameInputs.forEach(playerNameInput => playerNameInput.readOnly = areInputsReadOnly);
 
         // Game Intro and First Player Note are meant to be displayed only once after page load.
         intro.hidden = true;
