@@ -76,7 +76,7 @@ The following are the main fonts used for this project. Each link leads to the r
 
 The following are the colors used for this project. Each link leads to the respective [ColorHexa](https://www.colorhexa.com) page of the color.
 
-[Crayola] colors have been obtained from this [list of Crayola crayon colors on Wikipedia](https://en.wikipedia.org/wiki/List_of_Crayola_crayon_colors#Standard_colors).
+[Crayola](https://www.crayola.com) colors have been obtained from this [list of Crayola crayon colors on Wikipedia](https://en.wikipedia.org/wiki/List_of_Crayola_crayon_colors#Standard_colors).
 
 | Type of text                 | Color                                                                                          |
 |------------------------------|------------------------------------------------------------------------------------------------|
