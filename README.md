@@ -24,27 +24,17 @@ And finally, If you like my project, please support me by **starring its reposit
 
 #### How to Play
 
-1. Enter the names to be used for the players playing as _X_ and _O_.
-<br>
-There is no restriction on the types of characters used in player names, but a player name can not consist solely of whitespace characters, and the two players may not have the same name (two names consisting of the same characters but with different letter cases, or two names only differing in the number of leading/trailing spaces, are still considered the same).
-<br><br>
-The player whose mark is <i>X</i> plays first.
+1. Enter the names to be used for the players playing as _X_ and _O_. <br> There is no restriction on the types of characters used in player names, but **a player name may not consist solely of whitespace characters**, and **the two players may not have the same name, two names consisting of the same characters but with different letter cases, or two names only differing in the number of leading/trailing spaces**. <br><br> _The player whose mark is **X** plays first_.
 
-2. You can also set the gameboard size, that is, the number of rows and columns of the gameboard, or leave it at the default value of `3` (3 rows and 3 columns, the gameboard of a traditional tic-tac-toe game).
-<br>
-Gameboard size can be any integer value from <code>3</code> to <code>10</code>, inclusive.
+2. You may also set the gameboard size (that is, the number of rows and columns of the gameboard), or leave it at the default value of `3` (3 rows and 3 columns, the gameboard of a traditional tic-tac-toe game). <br> Gameboard size can be any integer value from `3` to `10` (inclusive), though larger sizes may cause the page to overflow the browser viewport, forcing players to scroll up and down to reach desired cells.
 
 3. Click the "New Game" button to start a new game with the specified settings.
 
-4. During each turn, the name of the player who should play will be surrounded by a box.
-<br>
-Each player should click on the cell of the gameboard they wish to mark.
+4. During each turn, the name of the player who should play will be surrounded by a box. <br> Each player should click on the cell of the gameboard they wish to mark.
 
-5. The game ends when one player marks three cells in a row, column, or a diagonal, in which case the said player is the winner, and their name is displayed below in the "winner" field, or when the gameboard is full of marks without either player managing to meet the aforementioned condition, in which case they come to a draw and "nobody" is displayed in the "winner" field.
+5. The winner is **the first player to mark all of the cells in a single row, column, or diagonal** - If all cells of the gameboard are marked before either player manages to meet the aforementioned condition, then neither player wins.
 
-6. After the game ends, you can edit the player names and gameboard size again and click "New Game" to start a new game with the new settings.
-<br>
-You can also start a new game in the middle of one in progress, but without editing player names or gameboard size.
+6. After the game ends, you can edit the player names and gameboard size again and click "New Game" to start a new game with the new settings. <br> You may also start a new game in the middle of one in progress, but without editing player names or gameboard size.
 
 ## Contributing to or Forking the project
 
