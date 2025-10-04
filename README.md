@@ -2,8 +2,6 @@
 
 A game of _[tic-tac-toe](https://en.wikipedia.org/wiki/Tic-tac-toe)_ ([also known as](https://en.wikipedia.org/wiki/Tic-tac-toe#Names) _noughts and crosses_ and _Xs and Os_ ) that you can play with a friend in your web browser.
 
-**NOTE**: This project is _still in development_.
-
 This project is created as a practice with [The Odin Project](https://www.theodinproject.com) (TOP) on [Factory Functions and The Module Pattern in JavaScript](https://www.theodinproject.com/lessons/node-path-javascript-factory-functions-and-the-module-pattern).
 
 This is my [ninth practice project](https://www.theodinproject.com/lessons/node-path-javascript-tic-tac-toe#assignment) with TOP. I would appreciate it if you also take a look at my [other projects](#other-projects), including my [other projects with TOP](#other-projects-with-the-odin-project).
