@@ -62,24 +62,24 @@
                         <label for="gameboard-size-input">Gameboard size</label>
 
                         <div class="gameboard-size-input-container">
-                            <input type="number" name="gameboard-size" id="gameboard-size-input" required value="3" placeholder="3 - 10" min="3" max="10" autocomplete="off">
+                            <input type="number" name="gameboard-size" id="gameboard-size-input" required value="3" placeholder="3 - 10" min="3" max="10" autocomplete="off" title="Set the gameboard width and height">
                             <span id="gameboard-height"></span>
                         </div>
                     </div>
                 </div>
 
                 <div class="form-section swap-player-marks-section" hidden>
-                    <input type="checkbox" name="swap-player-marks" id="swap-player-marks-input">
-                    <label for="swap-player-marks-input">Swap player marks on starting a new game</label>
+                    <input type="checkbox" name="swap-player-marks" id="swap-player-marks-input" title="If checked, each player will be assigned the other's current mark in the next game.">
+                    <label for="swap-player-marks-input">Swap player marks in the next game</label>
                 </div>
 
                 <div class="game-results" hidden>
                     <label for="winner-name-input">Winner</label>
-                    <input type="text" name="winner-name" id="winner-name-input" disabled maxlength="15">
+                    <input type="text" name="winner-name" id="winner-name-input" disabled maxlength="15" title="If one of you wins the game, their name will appear here.">
                 </div>
 
                 <div class="new-game-button-container">
-                    <button type="submit" title="Click here to start a new game with the current settings.">New Game</button>
+                    <button type="submit" title="Click here to start a new game with the current settings">New Game</button>
                 </div>
             </form>
         </main>
