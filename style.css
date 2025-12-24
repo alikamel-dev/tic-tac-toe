@@ -267,6 +267,35 @@ input::placeholder {
   color: var(--draw-color);
 }
 
+input[type="checkbox"] + label {
+  font-size: 1.5rem;
+}
+
+input[type="checkbox"] {
+  width: 0.5em;
+  height: 0.5em;
+
+  /* Adjusts the checkbox position to be on the label text baseline */
+  vertical-align: -2px;
+
+  border: 2px solid var(--main-color);
+  margin: 0 0.1em;
+
+  cursor: pointer;
+}
+
+/* TODO: Use a tick mark (✔) in the font for user-defined content in the checkbox. */
+
+input[type="checkbox"]:hover, input[type="checkbox"]:focus-visible, label:hover + input[type="checkbox"], label:focus-visible + input[type="checkbox"] {
+  background-color: var(--draw-color);
+  border-color: var(--main-color);
+}
+
+input[type="checkbox"]:checked {
+  background-color: var(--main-color);
+  border-color: var(--draw-color);
+}
+
 /* (1) Header styles */
 
 h1 {

@@ -239,6 +239,7 @@ const main = function () {
 
             // Public variables of `Gameboard` (to `DisplayController`)
             getGameboardWidth: Gameboard.getGameboardWidth,
+            isGameboardEmpty: Gameboard.isGameboardEmpty,
         });
     })();
 
@@ -253,7 +254,7 @@ const main = function () {
         const intro = document.body.querySelector("#intro");
 
         const form = document.body.querySelector("#page-form");
-        const [playerNamesSection, gameboardSection, gameboardSizeSection] = Array.from(form.querySelectorAll(".form-section"));
+        const [playerNamesSection, gameboardSection, gameboardSizeSection, swapPlayerMarksOnNewGameSection] = Array.from(form.querySelectorAll(".form-section"));
 
         const firstPlayerNote = form.querySelector("small#first-player-note");
         const firstPlayerNoteSpan = firstPlayerNote.querySelector(".mark-1");
@@ -266,12 +267,12 @@ const main = function () {
         const gameboardSizeInput = gameboardSizeSection.querySelector("#gameboard-size-input");
         const gameboardHeightSpan = gameboardSizeSection.querySelector("#gameboard-height");
 
+        const swapPlayerMarksOnNewGameCheckBox = swapPlayerMarksOnNewGameSection.querySelector("#swap-player-marks-input");
+
         const footer = document.body.querySelector("footer");
 
         const gameResultsContainer = form.querySelector(".game-results");
         const gameResultsLabelAndInput = Array.from(gameResultsContainer.children);
-
-        const newGameButton = form.querySelector("button[type='submit']");
 
         let playerNameInputs = [];
 
@@ -320,6 +321,25 @@ const main = function () {
 
         const startGame = () => {
             playerNameInputs = Array.from(form.querySelectorAll(".player-name-input"));
+
+            if (!swapPlayerMarksOnNewGameSection.hidden && swapPlayerMarksOnNewGameCheckBox.checked) {
+                // Swapping algorithm moves assigns each player the mark following their current one, with the last player being assigned the first mark.
+                // The net result is that the last player becomes the first player, and the rest follow them in the same order.
+
+                const lastPlayerNameInputIndex = playerNameInputs.length - 1;
+                const lastPlayerName = playerNameInputs[lastPlayerNameInputIndex].value;
+
+
+                for (let i = lastPlayerNameInputIndex; i >= 0; --i) {
+                    if (i === lastPlayerNameInputIndex)
+                        playerNameInputs[i].value = playerNameInputs[0].value;
+                    else if (i === 0)
+                        playerNameInputs[i].value = lastPlayerName;
+                    else
+                        playerNameInputs[i].value = playerNameInputs[i - 1].value;
+                };
+            };
+
             const playerNames = playerNameInputs.map(playerNameInput => {
                 playerNameInput.value = playerNameInput.value.trim();
 
@@ -432,6 +452,9 @@ const main = function () {
             // Game Intro and First Player Note are meant to be displayed only once after page load.
             intro.hidden = true;
             firstPlayerNote.hidden = true;
+
+            // Show the checkbox allowing the swapping of player marks only when a game has been finished.
+            swapPlayerMarksOnNewGameSection.hidden = !gameStage;
 
             gameResultsContainer.hidden = false;
         };
@@ -565,7 +588,7 @@ const main = function () {
                 input.setAttribute("id", `player-${playerNumber}-name-input`);
                 input.classList.add(`mark-${playerNumber}`);
                 input.setAttribute("title", `Enter a name for the player who is going to play as (${mark})`);
-                input.setAttribute("value", `Player ${mark}`);
+                input.setAttribute("value", `Player ${playerNumber}`);
 
                 label.setAttribute("for", input.getAttribute("id"));
                 label.innerHTML = `<span class="mark-${playerNumber}">${mark}</span> is `;
