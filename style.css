@@ -412,7 +412,7 @@ main.game-started > #page-form {
 /* (3) Footer styles */
 
 footer {
-  padding-bottom: 28px;
+  padding: 28px 0;
 }
 
 .credit {

@@ -432,8 +432,6 @@ const main = function () {
 
             gameboard.style.width = gameboard.style.height = `${maxDimension}px`;
 
-            footer.hidden = true;
-
             gameboardRows = Array.from(gameboard.children);
         };
 
