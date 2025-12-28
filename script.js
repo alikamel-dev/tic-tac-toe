@@ -4,6 +4,33 @@ const main = function () {
     // Objects for Gameboard and Game are created through Immediately Invoked Function Expressions (IIFEs) (The Module Pattern), as they are meant to have one instance.
     // Object for Player is created through a factory function, as it is meant to have two instances.
 
+    const allSquareMatrixLines = Object.freeze({
+        row: (squareMatrix, rowNumber) => squareMatrix[rowNumber],
+
+        column: (squareMatrix, columnNumber) => squareMatrix.map(row => row[columnNumber]),
+
+        mainDiagonal: (squareMatrix) => {
+            const mainDiagonal = [];
+
+            // In both of the following `for` statements, checking the condition `row < gameboard.length` without checking another regarding the value of `column` is enough.
+            // Also, separating two conditions using the comma operator (`,`) would make the entire parent condition statement return the value of the second condition, as the comma operator returns the value of the last operand.
+
+            for (let row = 0, column = 0; row < squareMatrix.length; ++row, ++column)
+                mainDiagonal.push(squareMatrix[row][column]);
+
+            return mainDiagonal;
+        },
+
+        antiDiagonal: (squareMatrix) => {
+            const antiDiagonal = [];
+
+            for (let row = 0, column = squareMatrix.length - 1; row < squareMatrix.length; ++row, --column)
+                antiDiagonal.push(squareMatrix[row][column]);
+
+            return antiDiagonal;
+        },
+    });
+
     const Game = (function () {
         // (A) Private variables
 
@@ -101,64 +128,70 @@ const main = function () {
 
         const allResults = Object.freeze({ NONE: 0, WIN_LOSE: 1, DRAW: 2 });
 
+        const TurnResultData = (result, winningLineType, winningLineNumber) => {
+            const getResult = () => result;
+
+            const getWinningLineType = () => winningLineType;
+            const getWinningLineNumber = () => winningLineNumber;
+
+            const getWinningLineData = () => { winningLineType, winningLineNumber };
+
+            return Object.preventExtensions({ getResult, getWinningLineType, getWinningLineNumber, getWinningLineData });
+        };
+
+        const isFilledWith = (array, value) => array.every(element => element === value);
+
         function markResult(mark, rowNumber, columnNumber) {
             // Return early if it is impossible for either player to win in the current turn (as neither player has placed the required number of instances of their mark that would make them win).
             if (currentTurn < firstTurnAtWhichGameCanEnd)
-                return allResults.NONE;
+                return TurnResultData(allResults.NONE);
 
             const gameboard = Gameboard.getGameboard();
 
             // (1) Checking the row of the gameboard where the specified cell is located
 
-            const rowMarked = gameboard[rowNumber].every(cell => cell === mark);
-            if (rowMarked) return allResults.WIN_LOSE;
+            const row = allSquareMatrixLines.row(gameboard, rowNumber);
+            const isRowMarked = isFilledWith(row, mark);
+
+            if (isRowMarked)
+                return TurnResultData(allResults.WIN_LOSE, "row", rowNumber);
 
             // (2) Checking the column of the gameboard where the specified cell is located
 
-            const columnMarked = gameboard.every(row => row[columnNumber] === mark);
-            if (columnMarked) return allResults.WIN_LOSE;
+            const column = allSquareMatrixLines.column(gameboard, columnNumber);
+            const isColumnMarked = isFilledWith(column, mark);
+
+            if (isColumnMarked)
+                return TurnResultData(allResults.WIN_LOSE, "column", columnNumber);
 
             // (3) Checking the main diagonal of the gameboard
 
-            // In both of the following `for` statements, checking the condition `row < gameboard.length` without checking another regarding the value of `column` is enough.
-            // Also, separating two conditions using the comma operator (`,`) would make the entire parent condition statement return the value of the second condition, as the comma operator returns the value of the last operand.
-
             // The marked cell is in the main diagonal of the gameboard if the number of its row is equal to the number of its column.
             if (rowNumber === columnNumber) {
-                let mainDiagonalMarked = true;
+                const mainDiagonal = allSquareMatrixLines.mainDiagonal(gameboard);
+                const isMainDiagonalMarked = isFilledWith(mainDiagonal, mark);
 
-                for (let row = 0, column = 0; row < gameboard.length; ++row, ++column) {
-                    if (gameboard[row][column] !== mark) {
-                        mainDiagonalMarked = false;
-                        break;
-                    };
-                };
-                    
-                if (mainDiagonalMarked) return allResults.WIN_LOSE;
+                if (isMainDiagonalMarked)
+                    return TurnResultData(allResults.WIN_LOSE, "mainDiagonal");
             };
 
             // (4) Checking the anti-diagonal of the gameboard
 
             // The marked cell is in the anti-diagonal of the gameboard if the sum of the numbers of its row and its column is equal to the gameboard width minus one.
             if (rowNumber + columnNumber === gameboard.length - 1) {
-                let antiDiagonalMarked = true;
+                const antiDiagonal = allSquareMatrixLines.antiDiagonal(gameboard);
+                const isAntiDiagonalMarked = isFilledWith(antiDiagonal, mark);
 
-                for (let row = 0, column = gameboard.length - 1; row < gameboard.length; ++row, --column) {
-                    if (gameboard[row][column] !== mark) {
-                        antiDiagonalMarked = false;
-                        break;
-                    };
-                };
-
-                if (antiDiagonalMarked) return allResults.WIN_LOSE;
+                if (isAntiDiagonalMarked)
+                    return TurnResultData(allResults.WIN_LOSE, "antiDiagonal");
             };
 
             // (5) Checking if the board is full (in which case both players come to a draw)
             if (currentTurn === Gameboard.getGameboardArea())
-                return allResults.DRAW;
+                return TurnResultData(allResults.DRAW);
 
             // (6) If all of the previous checks are negative, then the game is not over yet.
-            return allResults.NONE;
+            return TurnResultData(allResults.NONE);
         };
 
         // (B) Public variables
@@ -220,7 +253,7 @@ const main = function () {
             if (endTurn) {
                 const turnResult = markResult(currentPlayer.getMark(), rowNumber, columnNumber);
 
-                if (turnResult === allResults.NONE) {
+                if (turnResult.getResult() === allResults.NONE) {
                     const currentPlayerIndex = players.indexOf(currentPlayer);
                     currentPlayer = (currentPlayerIndex === players.length - 1 ? players[0] : players[currentPlayerIndex + 1]);
 
@@ -273,8 +306,6 @@ const main = function () {
 
         const swapPlayerMarksOnNewGameCheckBox = swapPlayerMarksOnNewGameSection.querySelector("#swap-player-marks-input");
 
-        const footer = document.body.querySelector("footer");
-
         const gameResultsContainer = form.querySelector(".game-results");
         const gameResultsLabelAndInput = Array.from(gameResultsContainer.children);
 
@@ -288,7 +319,7 @@ const main = function () {
 
         const allResults = Game.getAllResults();
 
-        // Holds the value returned by `Game.playTurn`. Initialized to `allResults.NONE` so that the following event listener works as intended on the first turn.
+        // Holds the value of the `result` property of the object returned by `Game.playTurn`. Initialized to `allResults.NONE` so that the following event listener works as intended on the first turn.
         let turnResult = allResults.NONE;
 
         // (A - 3) Event Functions
@@ -472,8 +503,8 @@ const main = function () {
             showGameboard();
             setForm("gameStart");
 
-            // Reset `turnResult` to `0` to allow players to mark the new gameboard.
-            turnResult = 0;
+            // Reset `turnResult` to `allResults.NONE` to allow players to mark the new gameboard.
+            turnResult = allResults.NONE;
 
             gameResultsLabelAndInput.forEach(element => element.classList.remove(Array.from(element.classList).pop()));
             gameResultsContainer.querySelector("input").value = "";
@@ -487,7 +518,7 @@ const main = function () {
         });
 
         gameboard.addEventListener('click', (event) => {
-            if (turnResult !== 0)
+            if (turnResult !== allResults.NONE)
                 return;
 
             const gameboardCell = event.target;
@@ -512,7 +543,9 @@ const main = function () {
             const rowNumber = gameboardRows.indexOf(gameboardRow);
             const columnNumber = gameboardRowCells.indexOf(gameboardCell);
 
-            turnResult = Game.playTurn(rowNumber, columnNumber);
+            const turnResultData = Game.playTurn(rowNumber, columnNumber);
+
+            turnResult = turnResultData.getResult();
 
             if (turnResult !== allResults.NONE) {
                 if (turnResult === allResults.WIN_LOSE) {
@@ -546,7 +579,7 @@ const main = function () {
             if (!gameboardCell.classList.contains("gameboard-cell"))
                 return;
 
-            if (turnResult !== 0 || gameboardCell.classList.contains("marked")) {
+            if (turnResult !== allResults.NONE || gameboardCell.classList.contains("marked")) {
                 gameboardCell.style.cursor = "not-allowed";
 
                 return;
@@ -563,7 +596,7 @@ const main = function () {
         gameboard.addEventListener('mouseout', (event) => {
             const gameboardCell = event.target;
 
-            if (!gameboardCell.classList.contains("gameboard-cell") || turnResult !== 0)
+            if (!gameboardCell.classList.contains("gameboard-cell") || turnResult !== allResults.NONE)
                 return;
 
             gameboardCell.style.opacity = "1.0";
