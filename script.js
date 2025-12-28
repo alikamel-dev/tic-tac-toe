@@ -99,22 +99,24 @@ const main = function () {
         // The turn before which neither player can win against or draw with the other, as neither player has placed the number of instances of their mark required for a win and the board is not yet full.
         const firstTurnAtWhichGameCanEnd = marks.length * (Gameboard.getGameboardWidth() - 1) + 1;
 
+        const allResults = Object.freeze({ NONE: 0, WIN_LOSE: 1, DRAW: 2 });
+
         function markResult(mark, rowNumber, columnNumber) {
             // Return early if it is impossible for either player to win in the current turn (as neither player has placed the required number of instances of their mark that would make them win).
             if (currentTurn < firstTurnAtWhichGameCanEnd)
-                return 0;
+                return allResults.NONE;
 
             const gameboard = Gameboard.getGameboard();
 
             // (1) Checking the row of the gameboard where the specified cell is located
 
             const rowMarked = gameboard[rowNumber].every(cell => cell === mark);
-            if (rowMarked) return 1;
+            if (rowMarked) return allResults.WIN_LOSE;
 
             // (2) Checking the column of the gameboard where the specified cell is located
 
             const columnMarked = gameboard.every(row => row[columnNumber] === mark);
-            if (columnMarked) return 1;
+            if (columnMarked) return allResults.WIN_LOSE;
 
             // (3) Checking the main diagonal of the gameboard
 
@@ -132,7 +134,7 @@ const main = function () {
                     };
                 };
                     
-                if (mainDiagonalMarked) return 1;
+                if (mainDiagonalMarked) return allResults.WIN_LOSE;
             };
 
             // (4) Checking the anti-diagonal of the gameboard
@@ -148,15 +150,15 @@ const main = function () {
                     };
                 };
 
-                if (antiDiagonalMarked) return 1;
+                if (antiDiagonalMarked) return allResults.WIN_LOSE;
             };
 
             // (5) Checking if the board is full (in which case both players come to a draw)
             if (currentTurn === Gameboard.getGameboardArea())
-                return 2;
+                return allResults.DRAW;
 
             // (6) If all of the previous checks are negative, then the game is not over yet.
-            return 0;
+            return allResults.NONE;
         };
 
         // (B) Public variables
@@ -218,7 +220,7 @@ const main = function () {
             if (endTurn) {
                 const turnResult = markResult(currentPlayer.getMark(), rowNumber, columnNumber);
 
-                if (turnResult === 0) {
+                if (turnResult === allResults.NONE) {
                     const currentPlayerIndex = players.indexOf(currentPlayer);
                     currentPlayer = (currentPlayerIndex === players.length - 1 ? players[0] : players[currentPlayerIndex + 1]);
 
@@ -230,16 +232,18 @@ const main = function () {
             };
         };
 
+        const getAllResults = () => allResults;
+
         return Object.preventExtensions({
             // Public variables of `Game` (to `DisplayController`)
             getMarks, getFirstPlayingMark,
             getCurrentPlayerName, getCurrentPlayerMark, getCurrentPlayerOrder, getCurrentTurn,
             start,
             playTurn,
+            getAllResults,
 
             // Public variables of `Gameboard` (to `DisplayController`)
             getGameboardWidth: Gameboard.getGameboardWidth,
-            isGameboardEmpty: Gameboard.isGameboardEmpty,
         });
     })();
 
@@ -282,8 +286,10 @@ const main = function () {
 
         // (A - 2) Variables
 
-        // Holds the value returned by `Game.playTurn`. Initialized to `0` so that the following event listener works as intended on the first turn.
-        let turnResult = 0;
+        const allResults = Game.getAllResults();
+
+        // Holds the value returned by `Game.playTurn`. Initialized to `allResults.NONE` so that the following event listener works as intended on the first turn.
+        let turnResult = allResults.NONE;
 
         // (A - 3) Event Functions
 
@@ -508,8 +514,8 @@ const main = function () {
 
             turnResult = Game.playTurn(rowNumber, columnNumber);
 
-            if (turnResult !== 0) {
-                if (turnResult === 1) {
+            if (turnResult !== allResults.NONE) {
+                if (turnResult === allResults.WIN_LOSE) {
                     const currentPlayer = getCurrentPlayerData();
 
                     gameboard.classList.add(`mark-${currentPlayer.order}`);
