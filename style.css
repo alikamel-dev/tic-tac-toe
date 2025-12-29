@@ -168,6 +168,13 @@ Ensure the index is enclosed within parentheses, as this prevents finding other 
   font-family: var(--title-font);
 }
 
+kbd {
+  color: white;
+  background-color: black;
+
+  padding: 2px 4px;
+}
+
 .italic {
   font-style: italic;
 }
