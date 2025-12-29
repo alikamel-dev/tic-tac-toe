@@ -315,7 +315,11 @@ const main = function () {
         playerNamesMustBeDifferentNote.textContent = "Player names must be different, and cannot consist of only whitespaces!";
         playerNamesMustBeDifferentNote.style.color = "#FF0000";
 
-        const selectionColor = getComputedStyle(document.documentElement).getPropertyValue("--selection-color");
+        const getHexadecimalValue = (rgb) => `#${rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/).slice(1).map(n => parseInt(n, 10).toString(16).padStart(2, '0')).join('')}`
+
+        // Colors
+
+        const drawColor = getComputedStyle(document.documentElement).getPropertyValue("--draw-color");
 
         // (A - 2) Variables
 
@@ -577,15 +581,24 @@ const main = function () {
                     const winningLineFunction = allSquareMatrixLines[winningLineType];
                     const winningLine = winningLineFunction(gameboardMatrix, winningLineNumber);
 
+                    const currentPlayerColorHexValue = getHexadecimalValue(currentPlayer.color);
+
                     winningLine.forEach(cell => {
                         cell.style.fontWeight = "900";
 
-                        cell.style.backgroundColor = selectionColor;
+                        // Opacity: 35%
+                        cell.style.backgroundColor = `${currentPlayerColorHexValue}59`;
                     });
 
                 } else {
                     gameboard.classList.add("draw");
-                    Array.from(gameboard.querySelectorAll("*")).forEach(element => element.style.borderColor = getComputedStyle(document.documentElement).getPropertyValue("--draw-color"));
+
+                    Array.from(gameboard.querySelectorAll("*")).forEach(element => { 
+                        element.style.borderColor = drawColor;
+
+                        // Opacity: 20%
+                        element.style.backgroundColor = `${drawColor}33`;
+                    });
 
                     gameResultsLabelAndInput.forEach(element => element.classList.add("draw"));
 
