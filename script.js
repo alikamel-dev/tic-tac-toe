@@ -573,6 +573,8 @@ const main = function () {
 
                     gameResultsContainer.querySelector("input").value = currentPlayer.name;
 
+                    gameResultsContainer.scrollIntoView({ behavior: "smooth", block: "center" });
+
                     // Code for highlighting the winning mark streak
 
                     const winningLineType = turnResultData.getWinningLineType();
