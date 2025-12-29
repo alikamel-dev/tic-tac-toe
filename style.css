@@ -97,6 +97,8 @@
 
   --draw-color: #8B8680;
 
+  --selection-color: hsla(60, 100%, 45%, 0.85);
+
   /* Fonts */
 
   /* 
@@ -159,7 +161,7 @@ Ensure the index is enclosed within parentheses, as this prevents finding other 
 }
 
 *::selection {
-  background-color: hsla(60, 100%, 45%, 0.85);
+  background-color: var(--selection-color);
 }
 
 *:not(p, small, .italic, .game-results) > [class^="mark"] {

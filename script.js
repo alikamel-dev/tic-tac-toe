@@ -315,6 +315,8 @@ const main = function () {
         playerNamesMustBeDifferentNote.textContent = "Player names must be different, and cannot consist of only whitespaces!";
         playerNamesMustBeDifferentNote.style.color = "#FF0000";
 
+        const selectionColor = getComputedStyle(document.documentElement).getPropertyValue("--selection-color");
+
         // (A - 2) Variables
 
         const allResults = Game.getAllResults();
@@ -419,9 +421,12 @@ const main = function () {
 
         let gameboardRows = [];
 
+        let gameboardMatrix = [];
+
         const showGameboard = () => {
             // Removes all the child nodes of the gameboard, without removing their event listeners (which do not exist).
             gameboard.innerHTML = "";
+            gameboardMatrix = [];
 
             gameboard.classList.remove(Array.from(gameboard.classList).pop());
 
@@ -446,10 +451,11 @@ const main = function () {
             const gameboardCell = document.createElement("div");
             gameboardCell.setAttribute("class", "gameboard-cell");
 
-            for (let i = 1; i <= gameboardWidth; ++i) {
+            for (let i = 0; i < gameboardWidth; ++i) {
                 const row = gameboardRow.cloneNode(true);
+                gameboardMatrix.push([]);
 
-                for (let j = 1; j <= gameboardWidth; ++j) {
+                for (let j = 0; j < gameboardWidth; ++j) {
                     const cell = gameboardCell.cloneNode(true);
 
                     // Used to force gameboard cells to have the width and height of a single character.
@@ -461,6 +467,9 @@ const main = function () {
                 };
 
                 gameboard.appendChild(row.cloneNode(true));
+
+                // Using spread syntax to push the elements of the array individually, instead of pushing the entire array as a single element.
+                gameboardMatrix[i].push(...Array.from(gameboard.lastChild.childNodes));
             };
 
             gameboard.style.width = gameboard.style.height = `auto`;
@@ -478,7 +487,7 @@ const main = function () {
             else if (gameStage === "gameEnd")
                 gameStage = true;
             else if (!(typeof gameStage === "boolean"))
-                throw TypeError(`The type of \`${gameStage}\` must be a boolean or one of the strings \`"start"\`, \`"gameStart\`, \`"end"\`, and \`"gameEnd"\` (You entered \`${gameStage}\`).`);
+                throw TypeError(`The type of \`${gameStage}\` must be a boolean or one of the strings \`"start"\`, \`"gameStart"\`, \`"end"\`, and \`"gameEnd"\` (You entered \`${gameStage}\`).`);
 
             const areInputsReadOnly = !gameStage;
 
@@ -559,6 +568,21 @@ const main = function () {
                     gameResultsLabelAndInput.forEach(element => element.classList.add(`mark-${currentPlayer.order}`));
 
                     gameResultsContainer.querySelector("input").value = currentPlayer.name;
+
+                    // Code for highlighting the winning mark streak
+
+                    const winningLineType = turnResultData.getWinningLineType();
+                    const winningLineNumber = turnResultData.getWinningLineNumber();
+
+                    const winningLineFunction = allSquareMatrixLines[winningLineType];
+                    const winningLine = winningLineFunction(gameboardMatrix, winningLineNumber);
+
+                    winningLine.forEach(cell => {
+                        cell.style.fontWeight = "900";
+
+                        cell.style.backgroundColor = selectionColor;
+                    });
+
                 } else {
                     gameboard.classList.add("draw");
                     Array.from(gameboard.querySelectorAll("*")).forEach(element => element.style.borderColor = getComputedStyle(document.documentElement).getPropertyValue("--draw-color"));
