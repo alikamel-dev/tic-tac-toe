@@ -645,6 +645,10 @@ const main = function () {
             };
         });
 
+        // In most modern web browsers this will cause the display of a confirmation dialog before reloading the page.
+        // Custom confirmation dialogs (created using `window.confirm`) are ignored and may cause errors.
+        window.addEventListener('beforeunload', event => event.preventDefault());
+
         // Public variables
 
         function displayNewGameScreen() {
