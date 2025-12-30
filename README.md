@@ -32,7 +32,9 @@ And finally, If you like my project, please support me by **starring its reposit
 
 5. The winner is **the first player to mark all of the cells in a single row, column, or diagonal** - If all cells of the gameboard are marked before either player manages to meet the aforementioned condition, then neither player wins.
 
-6. After the game ends, you can edit the player names and gameboard size, and you can also choose whether to swap player marks on starting the new game, and click "New Game" to start a new game with the new settings. <br> You may also start a new game in the middle of one in progress, but you may only edit the gameboard size in this case.
+6. After the game ends, you can edit the gameboard size, and choose whether to swap player marks on starting the new game, and click "New Game" to start a new game with the new settings. <br> You may also start a new game in the middle of one in progress, but you may only edit the gameboard size in this case.
+
+**NOTE**: You can click the _Home_ button while in a game to return to the start page, in case you wish to edit player names.
 
 ## Contributing to or Forking the project
 
