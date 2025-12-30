@@ -507,8 +507,15 @@ const main = function () {
             swapPlayerMarksOnNewGameSection.hidden = !gameStage;
 
             gameResultsContainer.hidden = false;
-
             returnToHomeButton.hidden = false;
+
+            // Prevent the use of "Enter" to submit the form once the game has started (to avoid accidental restart/confusing behavior)
+            form.addEventListener('keydown', (event) => {
+                if (event.key === "Enter")
+                    event.preventDefault();
+            });
+
+            returnToHomeButton.addEventListener('click', () => window.location.reload());
         };
 
         const doOnNewGame = () => {
@@ -527,22 +534,11 @@ const main = function () {
             gameResultsContainer.querySelector("input").value = "";
         };
 
-        buttonsContainer.addEventListener('click', (event) => {
-            const target = event.target;
+        form.addEventListener('submit', (event) => {
+            // Prevents form submission without preventing form validation (which occurs before the `submit` event fires).
+            event.preventDefault();
 
-            if (target.tagName === "BUTTON") {
-                switch (target) {
-                    case newGameButton:
-                        doOnNewGame();
-
-                        return;
-
-                    case returnToHomeButton:
-                        window.location.reload();
-
-                        return;
-                };
-            };
+            doOnNewGame();
         });
 
         gameboard.addEventListener('click', (event) => {
