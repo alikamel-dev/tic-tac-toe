@@ -663,13 +663,6 @@ const main = function () {
         // Custom confirmation dialogs (created using `window.confirm`) are ignored and may cause errors.
         window.addEventListener('beforeunload', event => event.preventDefault());
 
-        const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
-
-        document.addEventListener('keydown', (event) => {
-            if (event.key === "Enter")
-                form.dispatchEvent(submitEvent);
-        });
-
         // Public variables
 
         function displayNewGameScreen() {
