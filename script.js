@@ -309,6 +309,10 @@ const main = function () {
         const gameResultsContainer = form.querySelector(".game-results");
         const gameResultsLabelAndInput = Array.from(gameResultsContainer.children);
 
+        const buttonsContainer = form.querySelector(".buttons-container");
+        const newGameButton = buttonsContainer.querySelector("#start-new-game");
+        const returnToHomeButton = buttonsContainer.querySelector("#return-to-homepage");
+
         let playerNameInputs = [];
 
         const playerNamesMustBeDifferentNote = document.createElement("p");
@@ -493,9 +497,7 @@ const main = function () {
             else if (!(typeof gameStage === "boolean"))
                 throw TypeError(`The type of \`${gameStage}\` must be a boolean or one of the strings \`"start"\`, \`"gameStart"\`, \`"end"\`, and \`"gameEnd"\` (You entered \`${gameStage}\`).`);
 
-            const areInputsReadOnly = !gameStage;
-
-            playerNameInputs.forEach(playerNameInput => playerNameInput.readOnly = areInputsReadOnly);
+            playerNameInputs.forEach(playerNameInput => playerNameInput.readOnly = true);
 
             // Game Intro and First Player Note are meant to be displayed only once after page load.
             intro.hidden = true;
@@ -505,6 +507,8 @@ const main = function () {
             swapPlayerMarksOnNewGameSection.hidden = !gameStage;
 
             gameResultsContainer.hidden = false;
+
+            returnToHomeButton.hidden = false;
         };
 
         const doOnNewGame = () => {
@@ -523,11 +527,22 @@ const main = function () {
             gameResultsContainer.querySelector("input").value = "";
         };
 
-        form.addEventListener('submit', (event) => {
-            // Using `event.preventDefault()` in an event listener for submit button click prevents HTML form validation.
-            event.preventDefault();
+        buttonsContainer.addEventListener('click', (event) => {
+            const target = event.target;
 
-            doOnNewGame();
+            if (target.tagName === "BUTTON") {
+                switch (target) {
+                    case newGameButton:
+                        doOnNewGame();
+
+                        return;
+
+                    case returnToHomeButton:
+                        window.location.reload();
+
+                        return;
+                };
+            };
         });
 
         gameboard.addEventListener('click', (event) => {

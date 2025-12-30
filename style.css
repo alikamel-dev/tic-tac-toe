@@ -227,8 +227,13 @@ a {
   color: inherit;
 }
 
-a:not(:has(> img)):hover, a:not(:has(> img)):focus {
+a:not(:has(> img)):hover, a:not(:has(> img)):focus-visible {
   text-decoration: underline dashed;
+}
+
+a:has(> img):hover, a:has(> img):focus-visible {
+  -webkit-filter: brightness(2);
+  filter: brightness(2);
 }
 
 button, label {
@@ -248,7 +253,7 @@ button {
   border-bottom: 2px solid var(--main-color);
 }
 
-button:hover, button:focus,
+button:hover, button:focus-visible,
 input:hover, input:focus {
   border-bottom-style: dashed;
 }
@@ -332,7 +337,7 @@ main.game-started {
 }
 
 main.game-started > #page-form {
-  padding: 32px 0;
+  padding: 32px 0 16px 0;
 }
 
 #page-form {
@@ -419,6 +424,20 @@ main.game-started > #page-form {
   /* Makes the cursor not change on hovering over text, and makes text non-selectable, so that the user may not select the invisible text placed in empty cells. */
   -webkit-user-select: none;
   user-select: none;
+}
+
+.buttons-container {
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+  align-items: center;
+}
+
+#return-to-homepage {
+  font-size: 0.9em;
+
+  margin-top: 40px;
 }
 
 /* (3) Footer styles */
