@@ -591,7 +591,6 @@ const main = function () {
                         // Opacity: 35%
                         cell.style.backgroundColor = `${currentPlayerColorHexValue}59`;
                     });
-
                 } else {
                     gameboard.classList.add("draw");
 
