@@ -610,6 +610,7 @@ const main = function () {
 
                         // Opacity: 20%
                         element.style.backgroundColor = `${drawColor}33`;
+                        element.style.color = drawColor;
                     });
 
                     gameResultsLabelAndInput.forEach(element => element.classList.add("draw"));
