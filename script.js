@@ -497,7 +497,10 @@ const main = function () {
             else if (!(typeof gameStage === "boolean"))
                 throw TypeError(`The type of \`${gameStage}\` must be a boolean or one of the strings \`"start"\`, \`"gameStart"\`, \`"end"\`, and \`"gameEnd"\` (You entered \`${gameStage}\`).`);
 
-            playerNameInputs.forEach(playerNameInput => playerNameInput.readOnly = true);
+            playerNameInputs.forEach((playerNameInput, playerNameInputIndex) => { 
+                playerNameInput.readOnly = true;
+                playerNameInput.setAttribute("title", `The name of the player whose mark is (${Game.getMarks()[playerNameInputIndex]})`);
+            });
 
             // Game Intro and First Player Note are meant to be displayed only once after page load.
             intro.hidden = true;
