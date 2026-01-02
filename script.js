@@ -318,6 +318,7 @@ const main = function () {
         const playerNamesMustBeDifferentNote = document.createElement("p");
         playerNamesMustBeDifferentNote.textContent = "Player names must be different, and cannot consist of only whitespaces!";
         playerNamesMustBeDifferentNote.style.color = "#FF0000";
+        playerNamesMustBeDifferentNote.style.marginTop = getComputedStyle(form).rowGap;
 
         const getHexadecimalValue = (rgb) => `#${rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/).slice(1).map(n => parseInt(n, 10).toString(16).padStart(2, '0')).join('')}`
 
@@ -366,6 +367,22 @@ const main = function () {
             });
         };
 
+        const arePlayerNamesValid = (...playerNames) => {
+            const modifiedPlayerNames = playerNames.map(playerName => playerName.trim().toLowerCase());
+
+            const arePlayerNamesNotEmpty = modifiedPlayerNames.every(modifiedPlayerName => modifiedPlayerName !== "");
+            if (!arePlayerNamesNotEmpty)
+                return false;
+
+            const modifiedPlayerNamesSet = new Set(modifiedPlayerNames);
+
+            const arePlayerNamesUnique = (modifiedPlayerNames.length === modifiedPlayerNamesSet.size);
+            if (!arePlayerNamesUnique)
+                return false;
+
+            return true;
+        }
+
         const startGame = () => {
             playerNameInputs = Array.from(form.querySelectorAll(".player-name-input"));
 
@@ -375,7 +392,6 @@ const main = function () {
 
                 const lastPlayerNameInputIndex = playerNameInputs.length - 1;
                 const lastPlayerName = playerNameInputs[lastPlayerNameInputIndex].value;
-
 
                 for (let i = lastPlayerNameInputIndex; i >= 0; --i) {
                     if (i === lastPlayerNameInputIndex)
@@ -387,44 +403,26 @@ const main = function () {
                 };
             };
 
-            const playerNames = playerNameInputs.map(playerNameInput => {
-                playerNameInput.value = playerNameInput.value.trim();
-
-                return playerNameInput.value;
-            });
+            const playerNames = playerNameInputs.map(playerNameInput => playerNameInput.value);
 
             // Since this script uses player names as search queries, each player name must be unique to prevent errors.
 
-            let arePlayerNamesInvalid = true;
+            const areAllPlayerNamesValid = arePlayerNamesValid(...playerNames);
 
-            playerNames.forEach((playerName, playerIndex) => {
-                if (playerIndex === playerNames.length - 1)
-                    return;
-
-                for (let i = playerIndex + 1; i < playerNames.length; ++i) {
-                    arePlayerNamesInvalid = (playerName.toLowerCase() === playerNames[i].toLowerCase()) || (playerName.trim() === "");
-
-                    if (arePlayerNamesInvalid) {
-                        form.insertBefore(playerNamesMustBeDifferentNote, gameboardSection);
-
-                        return;
-                    };
-                };
-            });
-
-            if (!arePlayerNamesInvalid) {
+            if (areAllPlayerNamesValid) {
                 // Remove the warning regarding player names being the same if it exists
-                if (form.contains(playerNamesMustBeDifferentNote))
-                    form.removeChild(playerNamesMustBeDifferentNote);
+                if (playerNamesSection.contains(playerNamesMustBeDifferentNote))
+                    playerNamesSection.removeChild(playerNamesMustBeDifferentNote);
 
                 const gameboardWidth = parseInt(gameboardSizeInput.value);
 
                 Game.start(gameboardWidth, ...playerNames);
 
                 highlightCurrentPlayer();
-            };
+            } else 
+                playerNamesSection.appendChild(playerNamesMustBeDifferentNote);
 
-            return arePlayerNamesInvalid;
+            return areAllPlayerNamesValid;
         };
 
         let gameboardRows = [];
@@ -522,9 +520,9 @@ const main = function () {
         };
 
         const doOnNewGame = () => {
-            const arePlayerNamesNotUnique = startGame();
+            const arePlayerNamesValid = startGame();
 
-            if (arePlayerNamesNotUnique)
+            if (!arePlayerNamesValid)
                 return;
 
             showGameboard();
