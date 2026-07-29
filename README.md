@@ -1,7 +1,6 @@
 # Tic-Tac-Toe
 
-<!-- Screenshot is going to be replaced after adjustments have been made to the project. -->
-<!-- ![screenshot of a game of Tic-Tac-Toe](screenshot.png "A screenshot of the game") -->
+![screenshot of a game of Tic-Tac-Toe](screenshot.png "A screenshot of the game. From top to bottom: game title ('Xs and Os'), two input fields showing Player 1 and Player 2 as 'X' and 'O', respectively, A 3-by-3 gameboard marked by both players, where Player 1 has marked the diagonal extending from the top right cell to the bottom left cell, an input for the gameboard size, set to 3, and finally a read-only input field for the name of the winner, Player 1.")
 
 A game of _[tic-tac-toe](https://en.wikipedia.org/wiki/Tic-tac-toe)_ (also known as _noughts and crosses_ and _Xs and Os_, among [other names](https://en.wikipedia.org/wiki/Tic-tac-toe#Names)) that you can play with a friend in your web browser.
 
