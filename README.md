@@ -65,12 +65,12 @@ If you know how tic-tac-toe is played, you should be able to play this web versi
   <br>
 
   <li>
-    After the game ends, you can edit the gameboard size, and choose whether to swap player marks on starting the new game, then click <i>New Game</i> to start a new game with the new settings. You may also start a new game in the middle of a game in progress, but you cannot swap player markers in that case.
+    Once the game ends, the page scrolls down to show the gameboard and the result of the current round. You can click the <i>New Round</i> button to start a new round. Note that player markers will be swapped (For example, If your mark during the first round is <i>X</i>, it becomes <i>O</i> during the second round and it becomes <i>X</i> again during the third round, and so forth).
   </li>
 </ol>
 
 > [!TIP]
-> If you wish to edit player names, click the _Home_ button at the bottom of the page to end the current game and return to the start page.
+> You cannot edit player names or the gameboard size once a new game is started. To do this, click the _Home_ button at the bottom of the page to end the game and return to the start page.
 
 ## Design
 
@@ -100,13 +100,13 @@ The following are the colors used for this project. Each link leads to the respe
 
 [Crayola](https://crayola.com) colors have been chosen from this [list of Crayola crayon colors on Wikipedia](https://en.wikipedia.org/wiki/List_of_Crayola_crayon_colors#Standard_colors).
 
-| Type of item                 | Color                                                                       |
-|------------------------------|-----------------------------------------------------------------------------|
-| Main text                    | [`#000000`](https://colorhexa.com/000000) (Black)                           |
-| Player _X_ mark              | [`#ED0A3F`](https://colorhexa.com/ED0A3F) (Crayola Red)                     |
-| Player _O_ mark              | [`#0066FF`](https://colorhexa.com/0066FF) (Crayola Blue (III))              |
-| Draw/Input placeholder       | [`8B8680`](https://colorhexa.com/8B8680) (Crayolahttps://crayola.com/ Gray) |
-| Selection background         | [`hsl(60, 100%, 45%)`](https://colorhexa.com/E6E600) with `85%` opacity   |
+| Type of item                 | Color                                                                     |
+|------------------------------|---------------------------------------------------------------------------|
+| Main text                    | [`#000000`](https://colorhexa.com/000000) (Black)                         |
+| Player _X_ mark              | [`#ED0A3F`](https://colorhexa.com/ED0A3F) (Crayola Red)                   |
+| Player _O_ mark              | [`#0066FF`](https://colorhexa.com/0066FF) (Crayola Blue (III))            |
+| Draw/Input placeholder       | [`8B8680`](https://colorhexa.com/8B8680) (Crayola Gray)                   |
+| Selection background         | [`hsl(60, 100%, 45%)`](https://colorhexa.com/E6E600) with `85%` opacity |
 
 The selection background color is based on _Maximum Yellow_ Crayola color ([`#FAFA37`](https://colorhexa.com/FAFA37)), with modifications to saturation, lightness, and opacity.
 

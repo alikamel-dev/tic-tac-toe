@@ -99,6 +99,9 @@
 
   --selection-color: hsla(60, 100%, 45%, 0.85);
 
+  --warning-color: #b37400;
+  --error-color: #ff0000;
+
   /* Fonts */
 
   /* 
@@ -164,7 +167,7 @@ Ensure the index is enclosed within parentheses, as this prevents finding other 
   background-color: var(--selection-color);
 }
 
-*:not(p, small, .italic, .game-results) > [class^="mark"] {
+*:not(p, small, .bold, .italic, .game-results) > [class^="mark"] {
   font-family: var(--title-font);
 }
 
@@ -175,8 +178,20 @@ kbd {
   padding: 2px 4px;
 }
 
+.bold {
+  font-weight: bold;
+}
+
 .italic {
   font-style: italic;
+}
+
+.error {
+  color: var(--error-color);
+}
+
+.warning {
+  color: var(--warning-color);
 }
 
 .mark-1, .gameboard-section:not([hidden]) > #gameboard.mark-1 {
@@ -426,7 +441,7 @@ main.game-started > #page-form {
   user-select: none;
 }
 
-.buttons-container {
+.buttons-container, .start-new-game-container {
   display: flex;
   flex-direction: column;
 
@@ -434,10 +449,16 @@ main.game-started > #page-form {
   align-items: center;
 }
 
+.buttons-container {
+  gap: 40px;
+}
+
+.start-new-game-container {
+  gap: 16px;
+}
+
 #return-to-homepage {
   font-size: 0.9em;
-
-  margin-top: 40px;
 }
 
 /* (3) Footer styles */

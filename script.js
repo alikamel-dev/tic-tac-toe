@@ -291,7 +291,7 @@ const main = function () {
         const intro = document.body.querySelector("#intro");
 
         const form = document.body.querySelector("#page-form");
-        const [playerNamesSection, gameboardSection, gameboardSizeSection, swapPlayerMarksOnNewGameSection] = Array.from(form.querySelectorAll(".form-section"));
+        const [playerNamesSection, gameboardSection, gameboardSizeSection] = Array.from(form.querySelectorAll(".form-section"));
 
         const firstPlayerNote = form.querySelector("small#first-player-note");
         const firstPlayerNoteSpan = firstPlayerNote.querySelector(".mark-1");
@@ -304,20 +304,22 @@ const main = function () {
         const gameboardSizeInput = gameboardSizeSection.querySelector("#gameboard-size-input");
         const gameboardHeightSpan = gameboardSizeSection.querySelector("#gameboard-height");
 
-        const swapPlayerMarksOnNewGameCheckBox = swapPlayerMarksOnNewGameSection.querySelector("#swap-player-marks-input");
-
         const gameResultsContainer = form.querySelector(".game-results");
         const gameResultsLabelAndInput = Array.from(gameResultsContainer.children);
 
         const buttonsContainer = form.querySelector(".buttons-container");
-        const newGameButton = buttonsContainer.querySelector("#start-new-game");
+
+        const startNewGameContainer = form.querySelector(".start-new-game-container");
+        const newGameButton = startNewGameContainer.querySelector("#start-new-game");
+        const playerSwapNote = startNewGameContainer.querySelector("small#player-swap-note");
+
         const returnToHomeButton = buttonsContainer.querySelector("#return-to-homepage");
 
         let playerNameInputs = [];
 
         const playerNamesMustBeDifferentNote = document.createElement("p");
+        playerNamesMustBeDifferentNote.setAttribute('class', 'error');
         playerNamesMustBeDifferentNote.textContent = "Player names must be different, and cannot consist of only whitespaces!";
-        playerNamesMustBeDifferentNote.style.color = "#FF0000";
         playerNamesMustBeDifferentNote.style.marginTop = getComputedStyle(form).rowGap;
 
         const getHexadecimalValue = (rgb) => `#${rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/).slice(1).map(n => parseInt(n, 10).toString(16).padStart(2, '0')).join('')}`
@@ -327,6 +329,9 @@ const main = function () {
         const drawColor = getComputedStyle(document.documentElement).getPropertyValue("--draw-color");
 
         // (A - 2) Variables
+
+        // Used to decide whether to swap player marks.
+        let isFirstGame = true;
 
         const allResults = Game.getAllResults();
 
@@ -386,7 +391,8 @@ const main = function () {
         const startGame = () => {
             playerNameInputs = Array.from(form.querySelectorAll(".player-name-input"));
 
-            if (!swapPlayerMarksOnNewGameSection.hidden && swapPlayerMarksOnNewGameCheckBox.checked) {
+            // Prevent swapping player marks on the first game and allow it in all subsequent games.
+            if (!isFirstGame) {
                 // Swapping algorithm moves assigns each player the mark following their current one, with the last player being assigned the first mark.
                 // The net result is that the last player becomes the first player, and the rest follow them in the same order.
 
@@ -413,6 +419,8 @@ const main = function () {
                 // Remove the warning regarding player names being the same if it exists
                 if (playerNamesSection.contains(playerNamesMustBeDifferentNote))
                     playerNamesSection.removeChild(playerNamesMustBeDifferentNote);
+
+                isFirstGame = false;
 
                 const gameboardWidth = parseInt(gameboardSizeInput.value);
 
@@ -504,18 +512,17 @@ const main = function () {
             intro.hidden = true;
             firstPlayerNote.hidden = true;
 
-            // Show the checkbox allowing the swapping of player marks only when a game has been finished.
-            swapPlayerMarksOnNewGameSection.hidden = !gameStage;
+            gameboardSizeInput.disabled = true;
 
             gameResultsContainer.hidden = false;
+
+            newGameButton.textContent = "New Round";
+
+            // Prevent starting a new game in the middle of one in progress.
+            newGameButton.hidden = newGameButton.disabled = !gameStage;
+            playerSwapNote.hidden = !gameStage;
+
             returnToHomeButton.hidden = false;
-
-            // Prevent the use of "Enter" to submit the form once the game has started (to avoid accidental restart/confusing behavior)
-            form.addEventListener('keydown', (event) => {
-                if (event.key === "Enter")
-                    event.preventDefault();
-            });
-
             returnToHomeButton.addEventListener('click', () => window.location.reload());
         };
 

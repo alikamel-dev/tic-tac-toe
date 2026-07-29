@@ -68,18 +68,19 @@
                     </div>
                 </div>
 
-                <div class="form-section swap-player-marks-section" hidden>
-                    <input type="checkbox" name="swap-player-marks" id="swap-player-marks-input" title="If checked, each player will be assigned the other's current mark in the next game." checked>
-                    <label for="swap-player-marks-input">Swap player marks in the next game</label>
-                </div>
-
                 <div class="game-results" hidden>
                     <label for="winner-name-input">Winner</label>
                     <input type="text" name="winner-name" id="winner-name-input" disabled maxlength="15" title="If one of you wins the game, their name will appear here.">
                 </div>
 
                 <div class="buttons-container">
-                    <button type="submit" id="start-new-game" title="Click here to start a new game with the current settings">New Game</button>
+                    <div class="start-new-game-container">
+                        <button type="submit" id="start-new-game" title="Click here to start a new game with the current settings">New Game</button>
+
+                        <small id="player-swap-note" class="warning bold" hidden>
+                            Player marks will be swapped on the next round.
+                        </small>
+                    </div>
                     <button type="button" id="return-to-homepage" title="Click here to return to the home page" hidden>Home</button>
                 </div>
             </form>
