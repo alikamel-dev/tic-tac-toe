@@ -3,50 +3,75 @@
 <!-- Screenshot is going to be replaced after adjustments have been made to the project. -->
 <!-- ![screenshot of a game of Tic-Tac-Toe](screenshot.png "A screenshot of the game") -->
 
-A game of _[tic-tac-toe](https://en.wikipedia.org/wiki/Tic-tac-toe)_ ([also known as](https://en.wikipedia.org/wiki/Tic-tac-toe#Names) _noughts and crosses_ and _Xs and Os_ ) that you can play with a friend in your web browser.
+A game of _[tic-tac-toe](https://en.wikipedia.org/wiki/Tic-tac-toe)_ (also known as _noughts and crosses_ and _Xs and Os_, among [other names](https://en.wikipedia.org/wiki/Tic-tac-toe#Names)) that you can play with a friend in your web browser.
 
 This project was created as part of my journey in the [Full Stack JavaScript](https://theodinproject.com/paths/full-stack-javascript) path of [The Odin Project (TOP)](https://theodinproject.com), as a practice on [Factory Functions and The Module Pattern in JavaScript](https://theodinproject.com/lessons/node-path-javascript-factory-functions-and-the-module-pattern).
 
 > [!NOTE]
-> Despite being primarily a practice project, contributions are still welcome — you can try resolving any [issues](https://github.com/alikamel-dev/homepage/issues), or, if you think you have found an issue, [create an issue](https://github.com/alikamel-dev/homepage/issues/new) or solve it and [create a pull request](https://github.com/alikamel-dev/homepage/compare).
+> Despite being primarily a practice project, contributions are still welcome! You can try resolving any [issues](https://github.com/alikamel-dev/tic-tac-toe/issues), or, if you think you have found one, feel free to [create an issue](https://github.com/alikamel-dev/tic-tac-toe/issues/new) or solve it and [create a pull request](https://github.com/alikamel-dev/tic-tac-toe/compare).
 
-## Playing the Game
+## Playing the game
 
 You can play the game on its [GitHub Pages website](https://alikamel-dev.github.io/tic-tac-toe).
 
-If you like my project, please support me by **starring its repository on GitHub** and **liking it on the project's [community solutions page](https://theodinproject.com/lessons/node-path-javascript-tic-tac-toe/project_submissions)**.
+>[!IMPORTANT]
+> About supported devices and browsers:
+> - The game is designed to be played in a 1920 × 1080 screen/window resolution. The website is not completely responsive, and is likely to produce worse visual results on smaller screen sizes, especially mobile phone screens, though this issue can be mitigated by loading the desktop version of the website.
+> - The game is primarily developed for [Google Chrome](https://google.com/chrome). It should function properly in fairly new versions of major web browsers, though minor visual differences may arise.
 
-### Before you play
+[!TIP]
+> If you encounter an issue with the game, feel free to [create an issue](https://github.com/alikamel-dev/tic-tac-toe/issues/new) or even solve it yourself and [create a pull request](https://github.com/alikamel-dev/tic-tac-toe/compare).
 
-#### Supported devices and browsers
+If you like my project, please support me by starring [its repository on GitHub](https://github.com/alikamel-dev/tic-tac-toe) and, if you are a fellow learner of The Odin Project, liking it on the project's [community solutions page](https://theodinproject.com/lessons/node-path-javascript-tic-tac-toe/project_submissions).
 
-The game is designed to be played in a **a maximized [Google Chrome](https://google.com/chrome) browser window on a 1920 × 1080 monitor**.
+### How to Play
 
-Currently, The website is _not_ completely responsive, and is thus likely to produce worse visual results on smaller screen sizes, especially mobile devices, though this issue can be mitigated by loading the desktop version of the website.
+If you know how tic-tac-toe is played, you should be able to play this web version of it without much trouble — The following step-by-step guide is mostly for documentation purposes.
 
-The game may look slightly different in web browsers other than Chrome, but it should function properly on reasonably new versions of all of the major web browsers.
+<ol>
+  <li>
+    Enter the names to be used for the players playing as <i>X</i> and <i>O</i> (or simply leave the default names as-is). <br>
+    All characters are allowed in a player name. However, the following are not allowed:
+    <ul>
+      <li>A player name that consists solely of <a href="https://en.wikipedia.org/wiki/Whitespace_character">whitespace characters</a> (e.g. spaces, tabs, ...)</li>
+      <li>Two player names that are identical</li>
+      <li>Two player names that are only different in letter cases and/or the number of leading and/or trailing spaces</li>
+    </ul>
+  </li>
 
-> [!NOTE]
-> If you encounter an issue with the game, feel free to [create an issue](https://github.com/alikamel-dev/homepage/issues/new).
+  <br>
 
-#### How to Play
+  <li>
+    You may also set the gameboard size (that is, the number of rows and columns of the gameboard) to any number from `3` (the default, and the size of a traditional tic-tac-toe board) to `10`, though larger values tend to overflow the browser viewport, forcing players to sometimes scroll up and down to reach the desired cells.
+  </li>
 
-If you know how tic-tac-toe is played, you should be able to play this web version of it without trouble. The following step-by-step guide is mostly for documentation purposes.
+  <br>
 
-1. Enter the names to be used for the players playing as _X_ and _O_ (or simply leave the default names as-is) <br> There is no restriction on the types of characters used in player names, but **a player name may not consist solely of whitespace characters**, and **the two players may not have the same name, two names consisting of the same characters but with different letter cases, or two names only differing in the number of leading/trailing spaces**. <br><br> **The player whose mark is X plays first**.
+  <li>
+    Click the <i>New Game</i> button to start a new game with the specified settings. <b>The player whose mark is _X_ starts first</b>.
+  </li>
 
-2. You may also set the gameboard size (that is, the number of rows and columns of the gameboard), or leave it at the default value of `3` (3 rows and 3 columns, the gameboard of a traditional tic-tac-toe game). <br> Gameboard size can be any integer value from `3` to `10` (inclusive), though larger sizes may cause the page to overflow the browser viewport, forcing players to scroll up and down to reach desired cells.
+  <br>
+  
+  <li>
+    The name of the player supposed to play the current turn will be surrounded by a box. They should play their turn by clicking an empty cell they wish to mark.
+  </li>
 
-3. Click the "New Game" button to start a new game with the specified settings.
+  <br>
 
-4. The name of the player of the current turn will be surrounded by a box. <br> Each player should click on the cell of the gameboard they wish to mark.
+  <li>
+    <b>The first player to mark all of the cells in a single row, column, or diagonal wins</b>. If all cells of the gameboard are marked before either player manages to do so, then neither player wins.
+  </li>
 
-5. The winner is **the first player to mark all of the cells in a single row, column, or diagonal** - If all cells of the gameboard are marked before either player manages to do so, then neither player wins.
+  <br>
 
-6. After the game ends, you can edit the gameboard size, and choose whether to swap player marks on starting the new game, and click "New Game" to start a new game with the new settings. <br> You may also start a new game in the middle of one in progress, but you may only edit the gameboard size in this case.
+  <li>
+    After the game ends, you can edit the gameboard size, and choose whether to swap player marks on starting the new game, then click <i>New Game</i> to start a new game with the new settings. You may also start a new game in the middle of a game in progress, but you cannot swap player markers in that case.
+  </li>
+</ol>
 
 > [!TIP]
-> If you wish to edit player names, click the _Home_ button at the bottom of the page to end the current game and return to the homepage.
+> If you wish to edit player names, click the _Home_ button at the bottom of the page to end the current game and return to the start page.
 
 ## Design
 
@@ -64,28 +89,28 @@ The background image is [_white textile on a brown wooden table_](https://unspla
 
 The following are the main fonts used for this project. Each link leads to the respective [Google Fonts](https://fonts.google.com) page of the font.
 
-| Type of text                                | Font                                                                                 |
-|---------------------------------------------|--------------------------------------------------------------------------------------|
-| Title and Player marks (not user-generated) | [Caveat](https://fonts.google.com/specimen/Caveat)                                   |
-| Main text                                   | [Comic Neue](https://fonts.google.com/specimen/Comic+Neue)                           |
-| User-generated content                      | [Waiting for the Sunrise](https://fonts.google.com/specimen/Waiting+for+the+Sunrise) |
+| Type of text                                   | Font                                                                                 |
+|------------------------------------------------|--------------------------------------------------------------------------------------|
+| Title and Player marks (except user-generated) | [Caveat](https://fonts.google.com/specimen/Caveat)                                   |
+| Main text                                      | [Comic Neue](https://fonts.google.com/specimen/Comic+Neue)                           |
+| User-generated content                         | [Waiting for the Sunrise](https://fonts.google.com/specimen/Waiting+for+the+Sunrise) |
 
 ### Colors
 
 The following are the colors used for this project. Each link leads to the respective [ColorHexa](https://colorhexa.com) page of the color.
 
-[Crayola](https://crayola.com) colors have been obtained from this [list of Crayola crayon colors on Wikipedia](https://en.wikipedia.org/wiki/List_of_Crayola_crayon_colors#Standard_colors).
+[Crayola](https://crayola.com) colors have been chosen from this [list of Crayola crayon colors on Wikipedia](https://en.wikipedia.org/wiki/List_of_Crayola_crayon_colors#Standard_colors).
 
-| Type of item                 | Color                                                                                          |
-|------------------------------|------------------------------------------------------------------------------------------------|
-| Main text                    | [`#000000`](https://colorhexa.com/000000) (Black)                                          |
-| Player 'X' mark              | [`#ED0A3F`](https://colorhexa.com/ED0A3F) ([Crayola](https://crayola.com/) Red)        |
-| Player 'O' mark              | [`#0066FF`](https://colorhexa.com/0066FF) ([Crayola](https://crayola.com/) Blue (III)) |
-| Draw/Input placeholder       | [`8B8680`](https://colorhexa.com/8B8680) ([Crayola](https://crayola.com/) Gray)        |
-| Selection background         | [`hsl(60, 100%, 45%)`](https://colorhexa.com/E6E600) with `85%` opacity                  |
+| Type of item                 | Color                                                                       |
+|------------------------------|-----------------------------------------------------------------------------|
+| Main text                    | [`#000000`](https://colorhexa.com/000000) (Black)                           |
+| Player _X_ mark              | [`#ED0A3F`](https://colorhexa.com/ED0A3F) (Crayola Red)                     |
+| Player _O_ mark              | [`#0066FF`](https://colorhexa.com/0066FF) (Crayola Blue (III))              |
+| Draw/Input placeholder       | [`8B8680`](https://colorhexa.com/8B8680) (Crayolahttps://crayola.com/ Gray) |
+| Selection background         | [`hsl(60, 100%, 45%)`](https://colorhexa.com/E6E600) with `85%` opacity   |
 
 The selection background color is based on _Maximum Yellow_ Crayola color ([`#FAFA37`](https://colorhexa.com/FAFA37)), with modifications to saturation, lightness, and opacity.
 
 ## Other Projects
 
-Feel free to view my other projects on [my website](https://alikamel-dev.github.io/homepage).
+Feel free to view my other projects on [my website](https://alikamel-dev.github.io/tic-tac-toe).
