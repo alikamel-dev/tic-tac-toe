@@ -19,7 +19,7 @@ You can play the game on its [GitHub Pages website](https://alikamel-dev.github.
 > - The game is designed to be played in a 1920 × 1080 screen/window resolution. The website is not completely responsive, and is likely to produce worse visual results on smaller screen sizes, especially mobile phone screens, though this issue can be mitigated by loading the desktop version of the website.
 > - The game is primarily developed for [Google Chrome](https://google.com/chrome). It should function properly in fairly new versions of major web browsers, though minor visual differences may arise.
 
-[!TIP]
+> [!TIP]
 > If you encounter an issue with the game, feel free to [create an issue](https://github.com/alikamel-dev/tic-tac-toe/issues/new) or even solve it yourself and [create a pull request](https://github.com/alikamel-dev/tic-tac-toe/compare).
 
 If you like my project, please support me by starring [its repository on GitHub](https://github.com/alikamel-dev/tic-tac-toe) and, if you are a fellow learner of The Odin Project, liking it on the project's [community solutions page](https://theodinproject.com/lessons/node-path-javascript-tic-tac-toe/project_submissions).
