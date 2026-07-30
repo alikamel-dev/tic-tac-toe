@@ -112,4 +112,4 @@ The selection background color is based on _Maximum Yellow_ Crayola color ([`#FA
 
 ## Other Projects
 
-Feel free to view my other projects on [my website](https://alikamel-dev.github.io/tic-tac-toe).
+Feel free to view my other projects on [my website](https://alikamel-dev.github.io/homepage).
